@@ -41,11 +41,29 @@ public class Convert {
     public static final int STATUS_MISSING_INPUT_FILE = 1;
     public static final int STATUS_INVALID_ARGUMENTS = 255;
 
+    /**
+     * 命令行相关的option
+     * opt: eg: 设置为o表示在命令行支持 -o
+     * longOpt: eg: 设置为output-format表示在命令行支持 -output-format
+     * hasArg: 表示是否支持额外的输入
+     * description: 一个描述
+     */
+    //输出格式的参数
     private static final Option OPTION_OUTPUT_FORMAT = new Option("o", "output-format", true, "output format (e.g. pdf)");
+
+    //office的socket的端口号
     private static final Option OPTION_PORT = new Option("p", "port", true, "office socket port (optional; defaults to 2002)");
+
+    //文档格式注册表配置文件（可选）???
     private static final Option OPTION_REGISTRY = new Option("r", "registry", true, "document formats registry configuration file (optional)");
+
+    //最大转换时间, 默认是120s
     private static final Option OPTION_TIMEOUT = new Option("t", "timeout", true, "maximum conversion time in seconds (optional; defaults to 120)");
+
+    //使用给定用户安装目录中的设置（可选）
     private static final Option OPTION_USER_PROFILE = new Option("u", "user-profile", true, "use settings from the given user installation dir (optional)");
+
+    //
     private static final Options OPTIONS = initOptions();
 
     private static final int DEFAULT_OFFICE_PORT = 2002;
@@ -61,8 +79,8 @@ public class Convert {
     }
 
     public static void main(String[] arguments) throws ParseException, JSONException, IOException {
-        CommandLineParser commandLineParser = new PosixParser();
-        CommandLine commandLine = commandLineParser.parse(OPTIONS, arguments);
+        CommandLineParser commandLineParser = new PosixParser();//命令行解析器
+        CommandLine commandLine = commandLineParser.parse(OPTIONS, arguments);//使用命令行解析器解析arguments
 
         String outputFormat = null;
         if (commandLine.hasOption(OPTION_OUTPUT_FORMAT.getOpt())) {
