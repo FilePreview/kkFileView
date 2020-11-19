@@ -41,6 +41,9 @@ public class Convert {
     public static final int STATUS_MISSING_INPUT_FILE = 1;
     public static final int STATUS_INVALID_ARGUMENTS = 255;
 
+    /*
+     * this is a note left by zhang runsheng to test conflict 
+     */
     private static final Option OPTION_OUTPUT_FORMAT = new Option("o", "output-format", true, "output format (e.g. pdf)");
     private static final Option OPTION_PORT = new Option("p", "port", true, "office socket port (optional; defaults to 2002)");
     private static final Option OPTION_REGISTRY = new Option("r", "registry", true, "document formats registry configuration file (optional)");
