@@ -15,6 +15,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
     /**
+     *
      * 访问外部文件配置
      */
     @Override

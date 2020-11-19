@@ -14,8 +14,12 @@ package org.artofsolving.jodconverter.document;
 
 import java.util.Set;
 
+/**
+ * 文件格式注册
+ */
 public interface DocumentFormatRegistry {
 
+    // 通过后缀获得文件格式
     public DocumentFormat getFormatByExtension(String extension);
 
     public DocumentFormat getFormatByMediaType(String mediaType);
