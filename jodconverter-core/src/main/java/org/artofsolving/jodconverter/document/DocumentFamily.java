@@ -12,6 +12,9 @@
 //
 package org.artofsolving.jodconverter.document;
 
+/**
+ * 文件类型
+ */
 public enum DocumentFamily {
 
     TEXT, SPREADSHEET, PRESENTATION, DRAWING

@@ -41,6 +41,13 @@ public class Convert {
     public static final int STATUS_MISSING_INPUT_FILE = 1;
     public static final int STATUS_INVALID_ARGUMENTS = 255;
 
+    /*
+     * Option(String opt,String longOpt,boolean hasArg,String description)
+     * opt - short representation of the option
+     * longOpt - the long representation of the option
+     * hasArg - specifies whether the Option takes an argument or not
+     * description - describes the function of the option
+     */
     private static final Option OPTION_OUTPUT_FORMAT = new Option("o", "output-format", true, "output format (e.g. pdf)");
     private static final Option OPTION_PORT = new Option("p", "port", true, "office socket port (optional; defaults to 2002)");
     private static final Option OPTION_REGISTRY = new Option("r", "registry", true, "document formats registry configuration file (optional)");
@@ -62,20 +69,40 @@ public class Convert {
 
     public static void main(String[] arguments) throws ParseException, JSONException, IOException {
         CommandLineParser commandLineParser = new PosixParser();
+        // Represents list of arguments parsed against a Options descriptor.
         CommandLine commandLine = commandLineParser.parse(OPTIONS, arguments);
 
+        /*
+         * 输出文件格式
+         */
         String outputFormat = null;
         if (commandLine.hasOption(OPTION_OUTPUT_FORMAT.getOpt())) {
             outputFormat = commandLine.getOptionValue(OPTION_OUTPUT_FORMAT.getOpt());
         }
 
+        /*
+         * office socket端口
+         */
         int port = DEFAULT_OFFICE_PORT;
         if (commandLine.hasOption(OPTION_PORT.getOpt())) {
             port = Integer.parseInt(commandLine.getOptionValue(OPTION_PORT.getOpt()));
         }
 
+        /*
+         * Retrieve any left-over non-recognized options and arguments
+         * case1:
+         *      the first fileName: the input file name
+         *      the second fileName: where the output file locates
+         *
+         * case2:
+         *      input-file [input-file...]??
+         */
         String[] fileNames = commandLine.getArgs();
         if ((outputFormat == null && fileNames.length != 2) || fileNames.length < 1) {
+            /*
+             * Print the help for options with the specified command line syntax.
+             * This method prints help information to System.out.
+             */
             String syntax = "java -jar jodconverter-core.jar [options] input-file output-file\n"
                     + "or [options] -o output-format input-file [input-file...]";
             HelpFormatter helpFormatter = new HelpFormatter();
@@ -83,6 +110,10 @@ public class Convert {
             System.exit(STATUS_INVALID_ARGUMENTS);
         }
 
+        /*
+         * OPTION_REGISTRY.getOpt(): document formats registry configuration file
+         * 从这个file读取json字符串，这个json字符串包括文件格式配置的内容
+         */
         DocumentFormatRegistry registry;
         if (commandLine.hasOption(OPTION_REGISTRY.getOpt())) {
             File registryFile = new File(commandLine.getOptionValue(OPTION_REGISTRY.getOpt()));
@@ -90,6 +121,7 @@ public class Convert {
         } else {
             registry = new DefaultDocumentFormatRegistry();
         }
+
 
         DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
         configuration.setPortNumber(port);
