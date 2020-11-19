@@ -42,6 +42,12 @@ public class Convert {
     public static final int STATUS_INVALID_ARGUMENTS = 255;
 
     /*
+     * author Zhang Runsheng Date:2020-11-19
+     * this is a note left by zhang runsheng to test conflict 
+     */
+  
+     /*
+     * Author:Qin Huihuang Date:2020-11-19
      * Option(String opt,String longOpt,boolean hasArg,String description)
      * opt - short representation of the option
      * longOpt - the long representation of the option
