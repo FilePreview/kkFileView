@@ -19,6 +19,7 @@ import java.util.Map;
 public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
 
 	public DefaultDocumentFormatRegistry() {
+		// properties为FilterName-value
 		DocumentFormat pdf = new DocumentFormat("Portable Document Format", "pdf", "application/pdf");
 		pdf.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "writer_pdf_Export"));
 		pdf.setStoreProperties(DocumentFamily.SPREADSHEET, Collections.singletonMap("FilterName", "calc_pdf_Export"));
@@ -46,7 +47,8 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
 		html.setStoreProperties(DocumentFamily.SPREADSHEET, Collections.singletonMap("FilterName", "HTML (StarCalc)"));
 		html.setStoreProperties(DocumentFamily.PRESENTATION, Collections.singletonMap("FilterName", "impress_html_Export"));
 		addFormat(html);
-		
+
+		// 一种规范，基于XML的文件格式，因应试算表、图表、简报和文书处理文件等电子文件而设置
 		DocumentFormat odt = new DocumentFormat("OpenDocument Text", "odt", "application/vnd.oasis.opendocument.text");
 		odt.setInputFamily(DocumentFamily.TEXT);
 		odt.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "writer8"));
@@ -111,6 +113,7 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
         csv.setInputFamily(DocumentFamily.SPREADSHEET);
         Map<String,Object> csvLoadAndStoreProperties = new LinkedHashMap<String,Object>();
         csvLoadAndStoreProperties.put("FilterName", "Text - txt - csv (StarCalc)");
+        // csv文件有一个格外的属性 FilterOptions
         csvLoadAndStoreProperties.put("FilterOptions", "44,34,0");  // Field Separator: ','; Text Delimiter: '"' 
         csv.setLoadProperties(csvLoadAndStoreProperties);
         csv.setStoreProperties(DocumentFamily.SPREADSHEET, csvLoadAndStoreProperties);
@@ -120,6 +123,7 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
         tsv.setInputFamily(DocumentFamily.SPREADSHEET);
         Map<String,Object> tsvLoadAndStoreProperties = new LinkedHashMap<String,Object>();
         tsvLoadAndStoreProperties.put("FilterName", "Text - txt - csv (StarCalc)");
+        // tsv文件也有一个格外的属性 FilterOptions
         tsvLoadAndStoreProperties.put("FilterOptions", "9,34,0");  // Field Separator: '\t'; Text Delimiter: '"' 
         tsv.setLoadProperties(tsvLoadAndStoreProperties);
         tsv.setStoreProperties(DocumentFamily.SPREADSHEET, tsvLoadAndStoreProperties);

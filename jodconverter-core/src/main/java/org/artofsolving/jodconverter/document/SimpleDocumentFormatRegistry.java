@@ -25,6 +25,7 @@ public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
 		documentFormats.add(documentFormat);
 	}
 
+	// 通过extension查询指定的DocumentFormat
 	public DocumentFormat getFormatByExtension(String extension) {
         if (extension == null) {
             return null;
@@ -39,6 +40,7 @@ public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
 		return null;
 	}
 
+	// 通过mediaType查询指定的DocumentFormat
 	public DocumentFormat getFormatByMediaType(String mediaType) {
         if (mediaType == null) {
             return null;

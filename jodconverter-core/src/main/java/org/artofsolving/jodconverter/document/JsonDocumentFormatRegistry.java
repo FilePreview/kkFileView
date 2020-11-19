@@ -22,6 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 以json格式配置文件格式
+ */
 public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
 
     public JsonDocumentFormatRegistry(InputStream input) throws JSONException, IOException {
