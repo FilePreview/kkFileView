@@ -25,7 +25,7 @@ import org.apache.commons.io.IOUtils;
  * <p>
  * Should Work on Solaris too, except that the command line string
  * returned by <tt>ps</tt> there is limited to 80 characters and this affects
- * {@link #findPid(String)}.
+ * .
  */
 public class LinuxProcessManager implements ProcessManager {
 

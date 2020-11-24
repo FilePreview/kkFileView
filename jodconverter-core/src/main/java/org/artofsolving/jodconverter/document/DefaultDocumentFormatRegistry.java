@@ -19,7 +19,6 @@ import java.util.Map;
 public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
 
 	public DefaultDocumentFormatRegistry() {
-		// properties为FilterName-value
 		DocumentFormat pdf = new DocumentFormat("Portable Document Format", "pdf", "application/pdf");
 		pdf.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "writer_pdf_Export"));
 		pdf.setStoreProperties(DocumentFamily.SPREADSHEET, Collections.singletonMap("FilterName", "calc_pdf_Export"));
@@ -48,7 +47,6 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
 		html.setStoreProperties(DocumentFamily.PRESENTATION, Collections.singletonMap("FilterName", "impress_html_Export"));
 		addFormat(html);
 
-		// 一种规范，基于XML的文件格式，因应试算表、图表、简报和文书处理文件等电子文件而设置
 		DocumentFormat odt = new DocumentFormat("OpenDocument Text", "odt", "application/vnd.oasis.opendocument.text");
 		odt.setInputFamily(DocumentFamily.TEXT);
 		odt.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "writer8"));

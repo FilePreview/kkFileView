@@ -15,9 +15,6 @@ package org.artofsolving.jodconverter.document;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 文件格式，包括名称，后缀，媒体类型，属性
- */
 public class DocumentFormat {
 
     private String name;

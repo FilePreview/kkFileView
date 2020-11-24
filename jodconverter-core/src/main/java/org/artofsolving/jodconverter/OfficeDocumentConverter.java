@@ -57,6 +57,9 @@ public class OfficeDocumentConverter {
         return formatRegistry;
     }
 
+    /*
+     * 将输入文件解析到输出文件
+     */
     public void convert(File inputFile, File outputFile) throws OfficeException {
         String outputExtension = FilenameUtils.getExtension(outputFile.getName());
         DocumentFormat outputFormat = formatRegistry.getFormatByExtension(outputExtension);

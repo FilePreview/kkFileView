@@ -33,6 +33,17 @@ public class SigarProcessManager implements ProcessManager {
     public long findPid(ProcessQuery query) throws IOException {
         Sigar sigar = new Sigar();
         try {
+
+            /*
+             * author: Qin Huihuang Date:2020-11-24
+             *
+             * PTQL:进程查询语言，所有的操作系统都会给运行的进行分配一个PID，但是这个进程号
+             * 是一个随机数字，所以不方便用进程号来定位程序，PTQL使用的是进程的属性值来定位程序
+             * State.Name.eq
+             * operator eq: equal to value
+             * State.Name: base name of the process executable
+             */
+
             long[] pids = ProcessFinder.find(sigar, "State.Name.eq=" + query.getCommand());
             for (int i = 0; i < pids.length; i++) {
                 String[] arguments = sigar.getProcArgs(pids[i]);

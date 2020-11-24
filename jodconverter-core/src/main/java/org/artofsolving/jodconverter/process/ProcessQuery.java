@@ -12,9 +12,6 @@
 //
 package org.artofsolving.jodconverter.process;
 
-/**
- * 包含command,argument
- */
 public class ProcessQuery {
 
     private final String command;

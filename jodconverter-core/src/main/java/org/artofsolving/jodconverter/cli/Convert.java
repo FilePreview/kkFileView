@@ -41,13 +41,9 @@ public class Convert {
     public static final int STATUS_MISSING_INPUT_FILE = 1;
     public static final int STATUS_INVALID_ARGUMENTS = 255;
 
-    /*
-     * author Zhang Runsheng Date:2020-11-19
-     * this is a note left by zhang runsheng to test conflict 
-     */
-  
      /*
      * Author:Qin Huihuang Date:2020-11-19
+     *
      * Option(String opt,String longOpt,boolean hasArg,String description)
      * opt - short representation of the option
      * longOpt - the long representation of the option
@@ -75,37 +71,31 @@ public class Convert {
 
     public static void main(String[] arguments) throws ParseException, JSONException, IOException {
         CommandLineParser commandLineParser = new PosixParser();
-        // Represents list of arguments parsed against a Options descriptor.
         CommandLine commandLine = commandLineParser.parse(OPTIONS, arguments);
-
-        /*
-         * 输出文件格式
-         */
         String outputFormat = null;
         if (commandLine.hasOption(OPTION_OUTPUT_FORMAT.getOpt())) {
             outputFormat = commandLine.getOptionValue(OPTION_OUTPUT_FORMAT.getOpt());
         }
-
-        /*
-         * office socket端口
-         */
         int port = DEFAULT_OFFICE_PORT;
         if (commandLine.hasOption(OPTION_PORT.getOpt())) {
             port = Integer.parseInt(commandLine.getOptionValue(OPTION_PORT.getOpt()));
         }
 
         /*
+         * author: Qin Huihuang Date:2020-11-24
+         *
          * Retrieve any left-over non-recognized options and arguments
          * case1:
          *      the first fileName: the input file name
          *      the second fileName: where the output file locates
          *
          * case2:
-         *      input-file [input-file...]??
+         *      input-file [input-file...]
          */
         String[] fileNames = commandLine.getArgs();
         if ((outputFormat == null && fileNames.length != 2) || fileNames.length < 1) {
             /*
+             * author: Qin Huihuang  Date:2020-11-24
              * Print the help for options with the specified command line syntax.
              * This method prints help information to System.out.
              */
@@ -116,10 +106,6 @@ public class Convert {
             System.exit(STATUS_INVALID_ARGUMENTS);
         }
 
-        /*
-         * OPTION_REGISTRY.getOpt(): document formats registry configuration file
-         * 从这个file读取json字符串，这个json字符串包括文件格式配置的内容
-         */
         DocumentFormatRegistry registry;
         if (commandLine.hasOption(OPTION_REGISTRY.getOpt())) {
             File registryFile = new File(commandLine.getOptionValue(OPTION_REGISTRY.getOpt()));
@@ -127,7 +113,6 @@ public class Convert {
         } else {
             registry = new DefaultDocumentFormatRegistry();
         }
-
 
         DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
         configuration.setPortNumber(port);

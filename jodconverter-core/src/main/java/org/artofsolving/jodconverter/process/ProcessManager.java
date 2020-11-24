@@ -15,7 +15,11 @@ package org.artofsolving.jodconverter.process;
 import java.io.IOException;
 
 /**
- * 进程管理类,kill结束一个指定的进程，findPid找到指定进程的pid
+ * author: Qin Huihuang date:2020-11-24
+ *
+ * JODConverter开始处理一个office进程时，需要使用到进程管理器。当它开始进行这项工作，
+ * 就必须要检索该进程的PID，以便在需要时能够kill it。默认情况下，JODConverter会根据JODConverter
+ * 运行的操作系统来选择最佳的进程管理器。但是继承了ProcessManager接口的进程管理器均可以被使用
  */
 public interface ProcessManager {
 
@@ -27,17 +31,12 @@ public interface ProcessManager {
      * output to the process, waiting for the process to complete,
      * checking the exit status of the process, and destroying (killing)
      * the process.
-     * @param process
-     * @param pid
-     * @throws IOException
      */
     void kill(Process process, long pid) throws IOException;
 
     /**
-     * @param query
      * @return the pid if found, {@link #PID_NOT_FOUND} if not,
-     *   or {@link #PID_UNKNOWN} if this implementation is unable to find out
-     * @throws IOException
+     * or {@link #PID_UNKNOWN} if this implementation is unable to find out
      */
     long findPid(ProcessQuery query) throws IOException;
 
