@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
+/*
+ *Author:FanPan Date:2020-11-17
+ *日常清理工具类，每晚三点清理一次file文件夹。
+ */
 /**
  * @auther: chenjh
  * @since: 2019/6/11 7:45

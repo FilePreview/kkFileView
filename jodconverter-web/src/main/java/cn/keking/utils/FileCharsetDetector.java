@@ -78,6 +78,11 @@ public class FileCharsetDetector {
     boolean done = false;
     boolean isAscii = false;
 
+    /*
+     * Author:FanPan Date:2020-11-19
+     *
+     * 先判断是不是Ascii，若不是则进一步判断
+     */
     while ((len = imp.read(buf, 0, buf.length)) != -1) {
       // Check if the stream is only ascii.
       isAscii = det.isAscii(buf, len);

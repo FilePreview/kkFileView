@@ -13,7 +13,10 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-
+/*
+ *Author:FanPan Date:2020-11-17
+ *下载文件工具类，将文件下载至file文件夹下
+ */
 /**
  * @author yudian-it
  */
@@ -43,6 +46,10 @@ public class DownloadUtils {
         String urlStr = fileAttribute.getUrl();
         String type = fileAttribute.getSuffix();
         ReturnResponse<String> response = new ReturnResponse<>(0, "下载成功!!!", "");
+        /*
+         * Author FanPan Date 2020-11-22
+         * UUID为通用唯一标识码
+         */
         UUID uuid = UUID.randomUUID();
         if (null == fileName) {
             fileName = uuid+ "."+type;
@@ -89,6 +96,13 @@ public class DownloadUtils {
         }
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param urlStr
+     * @return 从url中读取的字节
+     * @throws IOException
+     */
     public byte[] getBytesFromUrl(String urlStr) throws IOException {
         InputStream is = getInputStreamFromUrl(urlStr);
         if (is != null) {
@@ -104,11 +118,24 @@ public class DownloadUtils {
         }
     }
 
+    /**
+     * 将从流中读取的字节保存到数组中
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param b 存储的字节数组
+     * @throws IOException
+     */
     public void saveBytesToOutStream(byte[] b, OutputStream os) throws IOException {
         os.write(b);
         os.close();
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param urlStr
+     * @return 连接url后得到的输入流
+     */
     private InputStream getInputStreamFromUrl(String urlStr) {
         try {
             URL url = new URL(urlStr);
@@ -123,6 +150,13 @@ public class DownloadUtils {
         }
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param is
+     * @return 从流中获取到的字节数组
+     * @throws IOException
+     */
     private byte[] getBytesFromStream(InputStream is) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
