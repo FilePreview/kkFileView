@@ -16,7 +16,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+ *Author:FanPan Date:2020-11-17
+ *pdf工具类，只实现了pdf转为图片这一个功能。
+ */
 @Component
 public class PdfUtils {
 
@@ -31,6 +34,16 @@ public class PdfUtils {
         this.fileUtils = fileUtils;
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-19
+     * @param pdfFilePath
+     * @param pdfName
+     * @param baseUrl
+     * @return pdf转换的图片的url集合
+     *
+     * 将pdf转换为图片，若已经转换过则直接读取图片的url，若没有则转换为图片，并储存url
+     */
     public List<String> pdf2jpg(String pdfFilePath, String pdfName, String baseUrl) {
         List<String> imageUrls = new ArrayList<>();
         Integer imageCount = fileUtils.getConvertedPdfImage(pdfFilePath);
@@ -48,6 +61,10 @@ public class PdfUtils {
             imageUrls.add(urlPrefix + "/" + i + imageFileSuffix);
             return imageUrls;
         }
+        /*
+         * Author:FanPan Date:2020-11-19
+         * 如果pdf没有被转换过，则在这里进行转换添加到转换记录中
+         */
         try {
             File pdfFile = new File(pdfFilePath);
             PDDocument doc = PDDocument.load(pdfFile);

@@ -45,6 +45,14 @@ public class ZipReader {
         this.fileUtils = fileUtils;
     }
 
+    /**
+     * 读取zip文件
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param filePath zip文件路径
+     * @param fileKey
+     * @return
+     */
     public String readZipFile(String filePath,String fileKey) {
         String archiveSeparator = "/";
         Map<String, FileNode> appender = Maps.newHashMap();
@@ -53,12 +61,21 @@ public class ZipReader {
         String archiveFileName = fileUtils.getFileNameFromPath(filePath);
         try {
             ZipFile zipFile = new ZipFile(filePath, fileUtils.getFileEncodeUTFGBK(filePath));
+            /*
+             *Author:FanPan Date:2020-11-22
+             *一个zipEntry就是一个子目录或一个zip文件
+             *
+             */
             Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
             // 排序
             entries = sortZipEntries(entries);
             List<Map<String, ZipArchiveEntry>> entriesToBeExtracted = Lists.newArrayList();
             while (entries.hasMoreElements()){
                 ZipArchiveEntry entry = entries.nextElement();
+                /*
+                 *Author:FanPan Date:2020-11-22
+                 * fullName为entry子目录名
+                 */
                 String fullName = entry.getName();
                 int level = fullName.split(archiveSeparator).length;
                 // 展示名
@@ -89,6 +106,13 @@ public class ZipReader {
         }
     }
 
+    /**
+     * 按照文件名长度对zip文件的子文件排序
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param entries
+     * @return
+     */
     private Enumeration<ZipArchiveEntry> sortZipEntries(Enumeration<ZipArchiveEntry> entries) {
         List<ZipArchiveEntry> sortedEntries = Lists.newArrayList();
         while(entries.hasMoreElements()){
@@ -98,6 +122,14 @@ public class ZipReader {
         return Collections.enumeration(sortedEntries);
     }
 
+    /**
+     * 读取rar文件
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param filePath zip文件路径
+     * @param fileKey
+     * @return
+     */
     public String unRar(String filePath,String fileKey){
         Map<String, FileNode> appender = Maps.newHashMap();
         List<String> imgUrls = Lists.newArrayList();
@@ -141,6 +173,14 @@ public class ZipReader {
         return null;
     }
 
+    /**
+     * 读取7Z文件
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param filePath zip文件路径
+     * @param fileKey
+     * @return
+     */
     public String read7zFile(String filePath,String fileKey) {
         String archiveSeparator = "/";
         Map<String, FileNode> appender = Maps.newHashMap();
@@ -194,6 +234,14 @@ public class ZipReader {
         return Collections.enumeration(sortedEntries);
     }
 
+    /**
+     * 向appender中增加子文件节点
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param appender
+     * @param parentName
+     * @param node
+     */
     private void addNodes(Map<String, FileNode> appender, String parentName, FileNode node) {
         if (appender.containsKey(parentName)) {
             appender.get(parentName).getChildList().add(node);
@@ -236,6 +284,13 @@ public class ZipReader {
         }
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * @param fullName 包含文件路径的文件名
+     * @param seperator 文件分割符
+     * @return 不包含层级的自身文件名
+     */
     private static String getLastFileName(String fullName, String seperator) {
         if (fullName.endsWith(seperator)) {
             fullName = fullName.substring(0, fullName.length()-1);
@@ -271,6 +326,11 @@ public class ZipReader {
         return null;
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * 静态内部类，文件节点。是zip文件中的子文件/文件夹，体现zip文件的层级结构
+     */
     public static class FileNode {
 
         private String originName;
@@ -355,6 +415,11 @@ public class ZipReader {
         }
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * 静态内部类，是一个zip解压缩工具类
+     */
     class ZipExtractorWorker implements Runnable {
 
         private final List<Map<String, ZipArchiveEntry>> entriesToBeExtracted;
@@ -367,6 +432,11 @@ public class ZipReader {
             this.filePath = filePath;
         }
 
+        /**
+         * @Author FanPan
+         * @Date 2020-11-22
+         * 将map里的zip文件解压缩
+         */
         @Override
         public void run() {
             for (Map<String, ZipArchiveEntry> entryMap : entriesToBeExtracted) {
@@ -388,6 +458,14 @@ public class ZipReader {
             }
         }
 
+        /**
+         * @Author FanPan
+         * @Date 2020-11-22
+         * @param childName zip文件中的子文件名
+         * @param zipFile zip文件的子文件的输入流
+         * 解压缩单个子文件，存在本地file文件夹下。
+         *
+         */
         private void extractZipFile(String childName, InputStream zipFile) {
             String outPath = fileDir + childName;
             try (OutputStream ot = new FileOutputStream(outPath)){
@@ -402,6 +480,11 @@ public class ZipReader {
         }
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * 静态内部类，是一个7Z压缩文件解压缩工具类
+     */
     class SevenZExtractorWorker implements Runnable {
 
         private final List<Map<String, SevenZArchiveEntry>> entriesToBeExtracted;
@@ -412,6 +495,11 @@ public class ZipReader {
             this.filePath = filePath;
         }
 
+        /**
+         * @Author FanPan
+         * @Date 2020-11-22
+         * 将map里的7Z文件解压缩
+         */
         @Override
         public void run() {
             try {
@@ -449,6 +537,11 @@ public class ZipReader {
         }
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-22
+     * 静态内部类，是一个Rar压缩文件解压缩工具类
+     */
     class RarExtractorWorker implements Runnable {
         private final List<Map<String, FileHeader>> headersToBeExtracted;
         private final Archive archive;
@@ -463,6 +556,11 @@ public class ZipReader {
             this.filePath = filePath;
         }
 
+        /**
+         * @Author FanPan
+         * @Date 2020-11-22
+         * 将map里的rar文件解压缩
+         */
         @Override
         public void run() {
             for (Map<String, FileHeader> entryMap : headersToBeExtracted) {
@@ -478,7 +576,13 @@ public class ZipReader {
                 new File(filePath).delete();
             }
         }
-
+        /**
+         * @Author FanPan
+         * @Date 2020-11-22
+         * @param childName rar文件中的子文件名
+         * 解压缩单个rar子文件，存在本地file文件夹下。
+         *
+         */
         private void extractRarFile(String childName, FileHeader header, Archive archive) {
             String outPath = fileDir + childName;
             try(OutputStream ot = new FileOutputStream(outPath)) {

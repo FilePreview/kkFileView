@@ -15,7 +15,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/*
+ *Author:FanPan Date:2020-11-17
+ *文件信息工具类，读取文件属性、文件类型以及获取或添加转换为pdf后的文件
+ */
 /**
  *
  * @author yudian-it
@@ -23,9 +26,18 @@ import java.util.Map;
  */
 @Component
 public class FileUtils {
-
+    /*
+     * Author:FanPan Date:2020-11-19
+     * sun.jnu.encoding是指操作系统的默认编码，file.encoding是指JAVA文件的编码
+     * （请记住，不是class文件，所有class文件的编码都是UTF-8），所以，在同一个操作系统上运行的JAVA应用程序，
+     * 其sun.jnu.encoding完全相同，而file.encoding即使在同一个JAVA应用程序中，JAVA文件的编码也可以不一样。
+     */
     private static final String DEFAULT_CONVERTER_CHARSET = System.getProperty("sun.jnu.encoding");
 
+    /*
+     * Author:FanPan Date:2020-11-19
+     * fileDir为项目中"file"文件夹的路径
+     */
     private final String fileDir = ConfigConstants.getFileDir();
 
     private final CacheService cacheService;
@@ -68,7 +80,20 @@ public class FileUtils {
         return typeFromFileName(fileName);
     }
 
+    /**
+     * @Author FanPan
+     * @Date 2020-11-19
+     * 根据文件名查看文件类型
+     *
+     * @param fileName 文件名
+     * @return 文件类型
+     */
     private FileType typeFromFileName(String fileName) {
+        /*
+         * Author:FanPan Date:2020-11-19
+         * simText为各种文本类型
+         * media为多媒体文件类型
+         */
         String[] simText = ConfigConstants.getSimText();
         String[] media = ConfigConstants.getMedia();
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -109,7 +134,7 @@ public class FileUtils {
     }
 
     /**
-     * 从路径中获取文件负
+     * 从路径中获取文件名
      * @param path
      *      类似这种：C:\Users\yudian-it\Downloads
      * @return 文件名

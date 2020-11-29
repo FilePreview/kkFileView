@@ -21,7 +21,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
+/*
+ *Author:FanPan Date:2020-11-17
+ *获取文件转换器
+ */
 /**
  * 创建文件转换器
  *
@@ -35,9 +38,28 @@ public class ConverterUtils {
 
     private OfficeManager officeManager;
 
+    /*
+     *Author:FanPan Date:2020-11-17
+     *被@PostConstruct修饰的方法会在服务器加载Servlet的时候运行，并且只会被服务器执行一次。
+     *PostConstruct在构造函数之后执行，init（）方法之前执行。
+     *PreDestroy（）方法在destroy（）方法执行之后执行
+     *
+     *如果想在生成对象时完成某些初始化操作，而偏偏这些初始化操作又依赖于依赖注入，那么久无法在构造函数中实现。
+     *为此，可以使用@PostConstruct注解一个方法来完成初始化，@PostConstruct注解的方法将会在依赖注入完成后被自动调用。
+     */
+
+    /**
+     * 启动OpenOffice，并在启动前杀死残留的进程
+     * @Author FanPan
+     * @Date 2020-11-17
+     */
     @PostConstruct
     public void initOfficeManager() {
         File officeHome;
+        /*
+         *Author:FanPan Date:2020-11-17
+         *OpenOffice安装在本地环境的目录
+         */
         officeHome = OfficeUtils.getDefaultOfficeHome();
         if (officeHome == null) {
             throw new RuntimeException("找不到office组件，请确认'office.home'配置是否有误");
@@ -62,12 +84,26 @@ public class ConverterUtils {
         }
     }
 
+    /**
+     * 获得文件的转换器
+     * @Author FanPan
+     * @Date 2020-11-17
+     * @return OfficeDocumentConverter
+     *
+     */
     public OfficeDocumentConverter getDocumentConverter() {
         OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager, new ControlDocumentFormatRegistry());
         converter.setDefaultLoadProperties(getLoadProperties());
         return converter;
     }
 
+    /**
+     * 设置转换器的属性
+     * @Author FanPan
+     * @Date 2020-11-17
+     * @return
+     *
+     */
     private Map<String,?> getLoadProperties() {
         Map<String,Object> loadProperties = new HashMap<>(10);
         loadProperties.put("Hidden", true);
@@ -77,11 +113,28 @@ public class ConverterUtils {
         return loadProperties;
     }
 
+    /**
+     * 杀死残留的office进程
+     * @Author FanPan
+     * @Date 2020-11-17
+     * @return
+     *
+     */
     private boolean killProcess() {
         boolean flag = false;
+        /*
+         *Author:FanPan Date:2020-11-17
+         *获取系统参数
+         */
         Properties props = System.getProperties();
+
         try {
             if (props.getProperty("os.name").toLowerCase().contains("windows")) {
+
+                /*
+                 *Author:FanPan Date:2020-11-17
+                 *执行tasklist命令，用来显示运行在本地或远程计算机上的所有进程
+                 */
                 Process p = Runtime.getRuntime().exec("cmd /c tasklist ");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 InputStream os = p.getInputStream();
@@ -91,6 +144,10 @@ public class ConverterUtils {
                 }
                 String s = baos.toString();
                 if (s.contains("soffice.bin")) {
+                    /*
+                     *Author:FanPan Date:2020-11-17
+                     *杀死正在运行的office进程
+                     */
                     Runtime.getRuntime().exec("taskkill /im " + "soffice.bin" + " /f");
                     flag = true;
                 }
@@ -114,7 +171,13 @@ public class ConverterUtils {
         }
         return flag;
     }
-
+    /**
+     * 关闭officeManager
+     * @Author FanPan
+     * @Date 2020-11-17
+     * @return
+     *
+     */
     @PreDestroy
     public void destroyOfficeManager(){
         if (null != officeManager && officeManager.isRunning()) {

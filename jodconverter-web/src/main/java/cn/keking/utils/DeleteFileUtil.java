@@ -5,7 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Objects;
-
+/**
+ * 删除文件工具类
+ * @Author FanPan
+ * @Date 2020-11-17
+ */
 public class DeleteFileUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteFileUtil.class);
@@ -56,6 +60,10 @@ public class DeleteFileUtil {
         boolean flag = true;
         // 删除文件夹中的所有文件包括子目录
         File[] files = dirFile.listFiles();
+        /*
+         *Author:FanPan Date:2020-11-17
+         * Objects.requireNonNull()方法判断对象是否为空，使代码更具可读性
+         */
         for (int i = 0; i < Objects.requireNonNull(files).length; i++) {
             // 删除子文件
             if (files[i].isFile()) {
