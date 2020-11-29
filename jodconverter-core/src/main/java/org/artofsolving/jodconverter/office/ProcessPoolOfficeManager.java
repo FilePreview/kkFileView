@@ -12,17 +12,17 @@
 //
 package org.artofsolving.jodconverter.office;
 
+import org.artofsolving.jodconverter.process.ProcessManager;
+
 import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.artofsolving.jodconverter.process.ProcessManager;
-
 class ProcessPoolOfficeManager implements OfficeManager {
 
-    private final BlockingQueue<PooledOfficeManager> pool;
+    private final BlockingQueue<PooledOfficeManager> pool;//阻塞队列
     private final PooledOfficeManager[] pooledManagers;
     private final long taskQueueTimeout;
 
@@ -30,6 +30,19 @@ class ProcessPoolOfficeManager implements OfficeManager {
 
     private final Logger logger = Logger.getLogger(ProcessPoolOfficeManager.class.getName());
 
+    /**
+     * @author 庞新程
+     * @param officeHome office的目录
+     * @param unoUrls 所有的连接
+     * @param runAsArgs 运行时参数
+     * @param templateProfileDir 模板配置目录
+     * @param workDir 工作目录
+     * @param retryTimeout
+     * @param taskQueueTimeout 排队时限
+     * @param taskExecutionTimeout 任务执行时限
+     * @param maxTasksPerProcess 每个进程的最大任务数
+     * @param processManager 进程管理器
+     */
     public ProcessPoolOfficeManager(File officeHome, UnoUrl[] unoUrls, String[] runAsArgs, File templateProfileDir, File workDir,
             long retryTimeout, long taskQueueTimeout, long taskExecutionTimeout, int maxTasksPerProcess,
             ProcessManager processManager) {

@@ -19,12 +19,22 @@ import java.util.Set;
 
 public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
 
+	/**
+	 * @author 庞新程
+	 * 支持的各种文档格式,DocumentFormat中配置了详细的信息
+	 */
 	private List<DocumentFormat> documentFormats = new ArrayList<DocumentFormat>();
 
 	public void addFormat(DocumentFormat documentFormat) {
 		documentFormats.add(documentFormat);
 	}
 
+	/**
+	 * @author 庞新程
+	 * 通过拓展名查找文档格式的描述类
+	 * @param extension 拓展名
+	 * @return 查找到的文档格式描述类
+	 */
 	public DocumentFormat getFormatByExtension(String extension) {
         if (extension == null) {
             return null;
@@ -39,6 +49,12 @@ public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
 		return null;
 	}
 
+	/**
+	 * @author 庞新程
+	 * 通过MIME查找文档格式的描述类
+	 * @param mediaType MIME类型
+	 * @return 查找到的文档格式描述类
+	 */
 	public DocumentFormat getFormatByMediaType(String mediaType) {
         if (mediaType == null) {
             return null;
@@ -52,6 +68,12 @@ public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
 	    return null;
 	}
 
+	/**
+	 * @author 庞新程
+	 * 通过DocumentFamily(一个枚举类,包含了四个变量, 这四个变量描述了支持什么样的文档(TEXT, SPREADSHEET, PRESENTATION, DRAWING)
+	 * @param family 文档的家族
+	 * @return 该文档家族对应的具体实现(例如PRESENTATION支持ppt, pptx, odp, sxi等)
+	 */
 	public Set<DocumentFormat> getOutputFormats(DocumentFamily family) {
 	    Set<DocumentFormat> formats = new HashSet<DocumentFormat>();
         for (DocumentFormat format : documentFormats) {

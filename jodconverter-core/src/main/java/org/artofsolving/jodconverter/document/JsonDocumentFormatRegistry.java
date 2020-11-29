@@ -12,16 +12,20 @@
 //
 package org.artofsolving.jodconverter.document;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author 庞新程
+ * 解析JSON字符串中的配置的文档格式
+ */
 public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
 
     public JsonDocumentFormatRegistry(InputStream input) throws JSONException, IOException {
@@ -33,7 +37,7 @@ public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
     }
 
     private void readJsonArray(String source) throws JSONException {
-        JSONArray array = new JSONArray(source);
+        JSONArray array = new JSONArray(source);//解析JSON字符串
         for (int i = 0; i < array.length(); i++) {
             JSONObject jsonFormat = array.getJSONObject(i);
             DocumentFormat format = new DocumentFormat();
@@ -57,6 +61,13 @@ public class JsonDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
         }
     }
 
+    /**
+     * @author 庞新程
+     * 把一个JSON对象转换为一个Java的Map
+     * @param jsonMap
+     * @return
+     * @throws JSONException
+     */
     private Map<String,?> toJavaMap(JSONObject jsonMap) throws JSONException {
         Map<String,Object> map = new HashMap<String,Object>();
         for (String key : JSONObject.getNames(jsonMap)) {

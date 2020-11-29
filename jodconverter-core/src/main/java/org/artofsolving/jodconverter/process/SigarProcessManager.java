@@ -12,11 +12,11 @@
 //
 package org.artofsolving.jodconverter.process;
 
-import java.io.IOException;
-
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.ptql.ProcessFinder;
+
+import java.io.IOException;
 
 /**
  * {@link ProcessManager} implementation that uses the SIGAR library.

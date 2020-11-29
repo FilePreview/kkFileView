@@ -12,6 +12,15 @@
 //
 package org.artofsolving.jodconverter.document;
 
+/**
+ * @author 庞新程
+ * 文档家族(表示了什么样的文档, 但并不代表某一种具体实现(eg: 演示文稿可以是ppt, pptx, odp, sxi...))
+ * 一个枚举类,包含了一些格式
+ * TEXT: 纯文本
+ * SPREADSHEET: 表格
+ * PRESENTATION: 演示文稿
+ * DRAWING: ???(绘制的图纸??)
+ */
 public enum DocumentFamily {
 
     TEXT, SPREADSHEET, PRESENTATION, DRAWING

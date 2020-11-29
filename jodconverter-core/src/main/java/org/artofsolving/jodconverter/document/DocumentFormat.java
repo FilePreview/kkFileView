@@ -15,19 +15,49 @@ package org.artofsolving.jodconverter.document;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author 庞新程
+ * 文件格式类
+ */
 public class DocumentFormat {
 
+    /**
+     * @author 庞新程
+     * 一个文件格式的描述
+     */
     private String name;
+
+    /**
+     * @author 庞新程
+     * 拓展名
+     */
     private String extension;
+
+    /**
+     * @author 庞新程
+     * MIME类型
+     */
     private String mediaType;
     private DocumentFamily inputFamily;
     private Map<String,?> loadProperties;
+
+    /**
+     * @author 庞新程
+     * 存储属性(通过文件的family设置的参数)
+     */
     private Map<DocumentFamily,Map<String,?>> storePropertiesByFamily;
 
     public DocumentFormat() {
         // default
     }
 
+    /**
+     * @author 庞新程
+     * 构造函数
+     * @param name
+     * @param extension
+     * @param mediaType
+     */
     public DocumentFormat(String name, String extension, String mediaType) {
         this.name = name;
         this.extension = extension;
