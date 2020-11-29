@@ -15,10 +15,22 @@ import java.nio.charset.StandardCharsets;
  * @author chenjh
  * @since 2020/2/18 19:13
  */
+
+/**
+ * Author：houzheng
+ * Date：11-18
+ * 信任主机过滤器
+ *
+ */
 public class TrustHostFilter implements Filter {
 
     private String notTrustHost;
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 初始化
+     *
+     */
     @Override
     public void init(FilterConfig filterConfig) {
         ClassPathResource classPathResource = new ClassPathResource("web/notTrustHost.html");
@@ -47,7 +59,12 @@ public class TrustHostFilter implements Filter {
     public void destroy() {
 
     }
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 获取源url
+     *
+     */
     private String getSourceUrl(ServletRequest request) {
         String url = request.getParameter("url");
         String currentUrl = request.getParameter("currentUrl");
@@ -63,7 +80,12 @@ public class TrustHostFilter implements Filter {
         }
         return null;
     }
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 获取主机
+     *
+     */
     private String getHost(String urlStr) {
         try {
             URL url = new URL(urlStr);

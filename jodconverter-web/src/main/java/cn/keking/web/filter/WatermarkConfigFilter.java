@@ -9,8 +9,22 @@ import java.io.IOException;
  * @author chenjh
  * @since 2020/5/13 18:34
  */
+
+/**
+ * Author：houzheng
+ * Date：11-18
+ * 水印配置过滤器
+ *
+ */
 public class WatermarkConfigFilter implements Filter {
 
+
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 初始化
+     *
+     */
     @Override
     public void init(FilterConfig filterConfig) {
 
@@ -32,6 +46,12 @@ public class WatermarkConfigFilter implements Filter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 销毁
+     *
+     */
     @Override
     public void destroy() {
 

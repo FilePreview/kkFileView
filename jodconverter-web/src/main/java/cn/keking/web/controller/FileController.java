@@ -26,6 +26,14 @@ import java.util.Objects;
  * @author yudian-it
  * @date 2017/12/1
  */
+/**
+ * Author：houzheng
+ * Date：11-18
+ * 文件控制器
+ * 执行对文件的基本操作：上传，删除，下载，搜索是否存在目标文件
+ *
+ */
+
 @RestController
 public class FileController {
 
@@ -38,6 +46,13 @@ public class FileController {
     private final String demoPath = demoDir + File.separator;
 
     @RequestMapping(value = "fileUpload", method = RequestMethod.POST)
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 文档上传
+     *
+     */
+
     public String fileUpload(@RequestParam("file") MultipartFile file) throws JsonProcessingException {
         // 获取文件名
         String fileName = file.getOriginalFilename();
@@ -70,6 +85,13 @@ public class FileController {
     }
 
     @RequestMapping(value = "deleteFile", method = RequestMethod.GET)
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 删除文件
+     *
+     */
+
     public String deleteFile(String fileName) throws JsonProcessingException {
         if (fileName.contains("/")) {
             fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
@@ -83,6 +105,13 @@ public class FileController {
     }
 
     @RequestMapping(value = "listFiles", method = RequestMethod.GET)
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 获取文件
+     *
+     */
+
     public String getFiles() throws JsonProcessingException {
         List<Map<String, String>> list = Lists.newArrayList();
         File file = new File(fileDir + demoPath);
@@ -91,6 +120,12 @@ public class FileController {
         }
         return new ObjectMapper().writeValueAsString(list);
     }
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 是否存在文件
+     *
+     */
 
     private boolean existsFile(String fileName) {
         File file = new File(fileDir + demoPath + fileName);
