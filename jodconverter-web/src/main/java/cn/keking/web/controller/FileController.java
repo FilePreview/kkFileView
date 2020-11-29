@@ -26,6 +26,12 @@ import java.util.Objects;
  * @author yudian-it
  * @date 2017/12/1
  */
+/*
+ * author:Qin Huiahuang date : 2020-11-26
+ *
+ * 控制文件的上传，删除和列举文件
+ * 所有的操作都是对src/main/file/demo目录下操作
+ */
 @RestController
 public class FileController {
 
@@ -37,6 +43,12 @@ public class FileController {
 
     private final String demoPath = demoDir + File.separator;
 
+    /**
+     * author:Qin Huihuang date:2020-11-26
+     *
+     * 由于后台没有服务器，因此上传文件只是简单地把本地某个目录下的文件复制到
+     * jodconverter-web/src/main/file/demo目录下
+     */
     @RequestMapping(value = "fileUpload", method = RequestMethod.POST)
     public String fileUpload(@RequestParam("file") MultipartFile file) throws JsonProcessingException {
         // 获取文件名
@@ -62,6 +74,10 @@ public class FileController {
         logger.info("上传文件：{}", fileDir + demoPath + fileName);
         try(InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(fileDir + demoPath + fileName)) {
             StreamUtils.copy(in, out);
+            /*
+             * author : Qin Huihaung date:2020-11-26
+             * 以字符串的形式返回Json串{"code":0,"msg":"SUCCESS","content":null}
+             */
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
         } catch (IOException e) {
             logger.error("文件上传失败", e);
@@ -89,6 +105,10 @@ public class FileController {
         if (file.exists()) {
             Arrays.stream(Objects.requireNonNull(file.listFiles())).forEach(file1 -> list.add(ImmutableMap.of("fileName", demoDir + "/" + file1.getName())));
         }
+        /*
+         * author : Qin Huihuang date:2020-11-26
+         * 返回数据格式 : [{"fileName":"demo/Exercise4.pdf"},{"fileName":"demo/Spring Security.docx"}]
+         */
         return new ObjectMapper().writeValueAsString(list);
     }
 

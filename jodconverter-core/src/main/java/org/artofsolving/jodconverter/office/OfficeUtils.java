@@ -94,6 +94,14 @@ public class OfficeUtils {
             if (programFiles == null) {
                 programFiles = System.getenv("ProgramFiles");
             }
+            /*
+             * author: Qin Huihuang Date:2020-11-24
+             *
+             * officeHome是openOffice的安装位置
+             * 具体来说从ProgramFiles(x86)/OpenOffice 4，Program/LibreOffice 4，
+             * jodconverter-web/src/main/office三个目录中找
+             * 最后返回的是jodcoverter-web/src/main/office/program/soffice.bin
+             */
             return findOfficeHome(
                 programFiles + File.separator + "OpenOffice 4",
                 programFiles + File.separator + "LibreOffice 4",

@@ -17,6 +17,9 @@ import java.io.File;
 import org.artofsolving.jodconverter.process.ProcessManager;
 import org.artofsolving.jodconverter.process.PureJavaProcessManager;
 
+/**
+ * Open Office 启动时相关属性的配置
+ */
 class ManagedOfficeProcessSettings {
 
     public static final long DEFAULT_RETRY_INTERVAL = 250L;

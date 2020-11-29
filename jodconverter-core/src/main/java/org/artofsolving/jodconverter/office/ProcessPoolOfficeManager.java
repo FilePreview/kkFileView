@@ -22,6 +22,9 @@ import org.artofsolving.jodconverter.process.ProcessManager;
 
 class ProcessPoolOfficeManager implements OfficeManager {
 
+    /**
+     * Office Manager的进程池
+     */
     private final BlockingQueue<PooledOfficeManager> pool;
     private final PooledOfficeManager[] pooledManagers;
     private final long taskQueueTimeout;

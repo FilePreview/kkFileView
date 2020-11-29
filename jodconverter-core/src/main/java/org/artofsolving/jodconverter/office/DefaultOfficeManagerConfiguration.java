@@ -24,6 +24,10 @@ public class DefaultOfficeManagerConfiguration {
 
     public static final long DEFAULT_RETRY_TIMEOUT = 120000L;
 
+    /*
+     * author:Qin Huihuang date:2020-11-24
+     * 找到open office的安装目录
+     */
     private File officeHome = OfficeUtils.getDefaultOfficeHome();
     private OfficeConnectionProtocol connectionProtocol = OfficeConnectionProtocol.SOCKET;
     private int[] portNumbers = new int[] { 2002 };
@@ -170,12 +174,18 @@ public class DefaultOfficeManagerConfiguration {
         if (processManager == null) {
             processManager = findBestProcessManager();
         }
-        
+
+        /*
+         * numInstances基本为1
+         */
         int numInstances = connectionProtocol == OfficeConnectionProtocol.PIPE ? pipeNames.length : portNumbers.length;
         UnoUrl[] unoUrls = new UnoUrl[numInstances];
         for (int i = 0; i < numInstances; i++) {
             unoUrls[i] = (connectionProtocol == OfficeConnectionProtocol.PIPE) ? UnoUrl.pipe(pipeNames[i]) : UnoUrl.socket(portNumbers[i]);
         }
+        /*
+         * 创建一个OfficeManager负责管理OfficeTask
+         */
         return new ProcessPoolOfficeManager(officeHome, unoUrls, runAsArgs, templateProfileDir, workDir, retryTimeout, taskQueueTimeout, taskExecutionTimeout, maxTasksPerProcess, processManager);
     }
 
