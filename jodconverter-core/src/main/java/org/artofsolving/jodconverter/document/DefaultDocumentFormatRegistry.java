@@ -204,3 +204,4 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
   	}
 
 }
+

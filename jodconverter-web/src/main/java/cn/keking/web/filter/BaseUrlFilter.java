@@ -11,10 +11,22 @@ import java.io.IOException;
  * @author chenjh
  * @since 2020/5/13 18:27
  */
+
+/**
+ * Author：houzheng
+ * Date：11-18
+ * url过滤器
+ *
+ */
 public class BaseUrlFilter implements Filter {
 
     private static String BASE_URL;
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 获取baseurl
+     *
+     */
     public static String getBaseUrl() {
         String baseUrl;
         try {
@@ -30,7 +42,12 @@ public class BaseUrlFilter implements Filter {
     public void init(FilterConfig filterConfig) {
 
     }
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     *检查url末尾是否有'/'，没有则添加
+     *
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String baseUrl;
@@ -52,6 +69,12 @@ public class BaseUrlFilter implements Filter {
     }
 
     @Override
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 销毁
+     *
+     */
     public void destroy() {
 
     }

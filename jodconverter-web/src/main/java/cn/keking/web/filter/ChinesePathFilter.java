@@ -9,6 +9,13 @@ import java.io.IOException;
  * @author yudian-it
  * @date 2017/11/30
  */
+/**
+ * Author：houzheng
+ * Date：11-18
+ * 中文路径过滤器
+ * 过滤请求和响应中的路径编码是否是UTF-8，如果不是，则修改为UTF-8
+ *
+ */
 public class ChinesePathFilter implements Filter {
 
     @Override
