@@ -14,12 +14,34 @@ package org.artofsolving.jodconverter.document;
 
 import java.util.Set;
 
+/**
+ * @author 庞新程
+ * 文件格式注册表接口
+ */
 public interface DocumentFormatRegistry {
 
+    /**
+     * @author 庞新程
+     * 通过拓展名拿相应的文件格式类
+     * @param extension 拓展名
+     * @return 文件格式
+     */
     public DocumentFormat getFormatByExtension(String extension);
 
+    /**
+     * @author 庞新程
+     * 通过MIME类型
+     * @param mediaType MIME类型
+     * @return 文件格式
+     */
     public DocumentFormat getFormatByMediaType(String mediaType);
 
+    /**
+     * @author 庞新程
+     * 通过DocumentFamily(???)拿到文件格式类的集合
+     * @param family 不知道
+     * @return 文件格式类的集合
+     */
     public Set<DocumentFormat> getOutputFormats(DocumentFamily family); 
 
 }

@@ -19,9 +19,19 @@ public interface ProcessManager {
     public static final long PID_NOT_FOUND = -2;
     public static final long PID_UNKNOWN = -1;
 
+    /**
+     * @author 庞新程
+     * 杀死进程
+     *
+     * @param process
+     * @param pid
+     * @throws IOException
+     */
     void kill(Process process, long pid) throws IOException;
 
     /**
+     * @author 庞新程
+     * 查找进程的id
      * @param query
      * @return the pid if found, {@link #PID_NOT_FOUND} if not,
      *   or {@link #PID_UNKNOWN} if this implementation is unable to find out

@@ -46,14 +46,23 @@ class ExternalOfficeManager implements OfficeManager {
 		this.connectOnStart = connectOnStart;
 	}
 
+	/**
+	 * @author 庞新程
+	 * 尝试连接到office
+	 * @throws OfficeException
+	 */
 	public void start() throws OfficeException {
 		if (connectOnStart) {
-			synchronized (connection) {
+			synchronized (connection) {//synchronized保证对与connection的访问是线程安全的, 线程只有拿到connection对应的锁, 才能访问下面的代码
 				connect();
 			}
 		}
 	}
 
+	/**
+	 * @author 庞新程
+	 * 尝试断开连接
+	 */
 	public void stop() {
 		synchronized (connection) {
 			if (connection.isConnected()) {
@@ -62,6 +71,12 @@ class ExternalOfficeManager implements OfficeManager {
 		}
 	}
 
+	/**
+	 * @author 庞新程
+	 * 尝试执行任务
+	 * @param task
+	 * @throws OfficeException
+	 */
 	public void execute(OfficeTask task) throws OfficeException {
 		synchronized (connection) {
 			if (!connection.isConnected()) {
