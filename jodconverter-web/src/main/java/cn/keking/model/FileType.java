@@ -15,10 +15,22 @@ public enum FileType {
     cad("cadFilePreviewImpl");
 
     private final String instanceName;
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 构造器
+     *
+     */
 
     FileType(String instanceName){
         this.instanceName=instanceName;
     }
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 获取实例名字
+     *
+     */
 
     public String getInstanceName() {
         return instanceName;

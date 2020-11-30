@@ -12,23 +12,37 @@
 //
 package org.artofsolving.jodconverter.office;
 
-import java.io.File;
-
+import org.artofsolving.jodconverter.process.LinuxProcessManager;
 import org.artofsolving.jodconverter.process.ProcessManager;
 import org.artofsolving.jodconverter.process.PureJavaProcessManager;
-import org.artofsolving.jodconverter.process.LinuxProcessManager;
 import org.artofsolving.jodconverter.process.SigarProcessManager;
 import org.artofsolving.jodconverter.util.PlatformUtils;
 
+import java.io.File;
+
+/**
+ * @author 庞新程
+ * OfficeManager的配置文件
+ */
 public class DefaultOfficeManagerConfiguration {
 
+    /**
+     * 默认重试时限
+     * @author 庞新程
+     */
     public static final long DEFAULT_RETRY_TIMEOUT = 120000L;
+
 
     /*
      * author:Qin Huihuang date:2020-11-24
      * 找到open office的安装目录
      */
     private File officeHome = OfficeUtils.getDefaultOfficeHome();
+
+    /**
+     * Office连接协议(管道/socket)[默认设置为socket](管道应该是linux下用的)
+     * @author 庞新程
+     */
     private OfficeConnectionProtocol connectionProtocol = OfficeConnectionProtocol.SOCKET;
     private int[] portNumbers = new int[] { 2002 };
     private String[] pipeNames = new String[] { "office" };
@@ -37,16 +51,32 @@ public class DefaultOfficeManagerConfiguration {
     private File workDir = new File(System.getProperty("java.io.tmpdir"));
     private long taskQueueTimeout = 30000L;  // 30 seconds
     private long taskExecutionTimeout = 120000L;  // 2 minutes
-    private int maxTasksPerProcess = 200;
-    private long retryTimeout = DEFAULT_RETRY_TIMEOUT;
+    private int maxTasksPerProcess = 200;//每一个进程的最大任务数
+    private long retryTimeout = DEFAULT_RETRY_TIMEOUT;//重试时间
 
     private ProcessManager processManager = null;  // lazily initialised
 
+    /**
+     * @author 庞新程
+     * 设置officeHome
+     * @param officeHome
+     * @return
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
+     */
     public DefaultOfficeManagerConfiguration setOfficeHome(String officeHome) throws NullPointerException, IllegalArgumentException {
         checkArgumentNotNull("officeHome", officeHome);
         return setOfficeHome(new File(officeHome));
     }
 
+    /**
+     * @author 庞新程
+     * 设置officeHome
+     * @param officeHome
+     * @return
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
+     */
     public DefaultOfficeManagerConfiguration setOfficeHome(File officeHome) throws NullPointerException, IllegalArgumentException  {
         checkArgumentNotNull("officeHome", officeHome);
         checkArgument("officeHome", officeHome.isDirectory(), "must exist and be a directory");
@@ -54,17 +84,38 @@ public class DefaultOfficeManagerConfiguration {
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置office的连接协议(管道/socket)
+     * @param connectionProtocol
+     * @return
+     * @throws NullPointerException
+     */
     public DefaultOfficeManagerConfiguration setConnectionProtocol(OfficeConnectionProtocol connectionProtocol) throws NullPointerException {
         checkArgumentNotNull("connectionProtocol", connectionProtocol);
         this.connectionProtocol = connectionProtocol;
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置端口号
+     * @param portNumber
+     * @return
+     */
     public DefaultOfficeManagerConfiguration setPortNumber(int portNumber) {
         this.portNumbers = new int[] { portNumber };
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置多个端口号
+     * @param portNumbers
+     * @return
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
+     */
     public DefaultOfficeManagerConfiguration setPortNumbers(int... portNumbers) throws NullPointerException, IllegalArgumentException {
         checkArgumentNotNull("portNumbers", portNumbers);
         checkArgument("portNumbers", portNumbers.length > 0, "must not be empty");
@@ -72,12 +123,27 @@ public class DefaultOfficeManagerConfiguration {
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置管道的名字
+     * @param pipeName
+     * @return
+     * @throws NullPointerException
+     */
     public DefaultOfficeManagerConfiguration setPipeName(String pipeName) throws NullPointerException {
         checkArgumentNotNull("pipeName", pipeName);
         this.pipeNames = new String[] { pipeName };
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置多个管道
+     * @param pipeNames
+     * @return
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
+     */
     public DefaultOfficeManagerConfiguration setPipeNames(String... pipeNames) throws NullPointerException, IllegalArgumentException {
         checkArgumentNotNull("pipeNames", pipeNames);
         checkArgument("pipeNames", pipeNames.length > 0, "must not be empty");
@@ -85,11 +151,24 @@ public class DefaultOfficeManagerConfiguration {
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置运行时参数
+     * @param runAsArgs
+     * @return
+     */
     public DefaultOfficeManagerConfiguration setRunAsArgs(String... runAsArgs) {
 		this.runAsArgs = runAsArgs;
 		return this;
 	}
 
+    /**
+     * @author 庞新程
+     * 设置模板配置的目录
+     * @param templateProfileDir
+     * @return
+     * @throws IllegalArgumentException
+     */
     public DefaultOfficeManagerConfiguration setTemplateProfileDir(File templateProfileDir) throws IllegalArgumentException {
         if (templateProfileDir != null) {
             checkArgument("templateProfileDir", templateProfileDir.isDirectory(), "must exist and be a directory");
@@ -112,16 +191,34 @@ public class DefaultOfficeManagerConfiguration {
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置任务排队超时时间
+     * @param taskQueueTimeout
+     * @return
+     */
     public DefaultOfficeManagerConfiguration setTaskQueueTimeout(long taskQueueTimeout) {
         this.taskQueueTimeout = taskQueueTimeout;
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置任务执行超时时间
+     * @param taskExecutionTimeout
+     * @return
+     */
     public DefaultOfficeManagerConfiguration setTaskExecutionTimeout(long taskExecutionTimeout) {
         this.taskExecutionTimeout = taskExecutionTimeout;
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 设置每一个进程最大任务数
+     * @param maxTasksPerProcess
+     * @return
+     */
     public DefaultOfficeManagerConfiguration setMaxTasksPerProcess(int maxTasksPerProcess) {
         this.maxTasksPerProcess = maxTasksPerProcess;
         return this;
@@ -156,6 +253,12 @@ public class DefaultOfficeManagerConfiguration {
         return this;
     }
 
+    /**
+     * @author 庞新程
+     * 创建一个进程池OfficeManager
+     * @return
+     * @throws IllegalStateException
+     */
     public OfficeManager buildOfficeManager() throws IllegalStateException {
         if (officeHome == null) {
             throw new IllegalStateException("officeHome not set and could not be auto-detected");
@@ -189,8 +292,13 @@ public class DefaultOfficeManagerConfiguration {
         return new ProcessPoolOfficeManager(officeHome, unoUrls, runAsArgs, templateProfileDir, workDir, retryTimeout, taskQueueTimeout, taskExecutionTimeout, maxTasksPerProcess, processManager);
     }
 
+    /**
+     * @author 庞新程
+     * 创建一个最优的进程管理器
+     * @return
+     */
     private ProcessManager findBestProcessManager() {
-        if (isSigarAvailable()) {
+        if (isSigarAvailable()) {//Sigar是否可用
             return new SigarProcessManager();
         } else if (PlatformUtils.isLinux()) {
         	LinuxProcessManager processManager = new LinuxProcessManager();
@@ -205,27 +313,51 @@ public class DefaultOfficeManagerConfiguration {
         }
     }
 
+    /**
+     * @author 庞新程
+     * 判断Sigar是否可用(Sigar有问题, 直接让它返回false, 然后使用PureJavaProcessManager(Windows)或者LinuxProcessManager(Linux))
+     * @return
+     */
     private boolean isSigarAvailable() {
         try {
             Class.forName("org.hyperic.sigar.Sigar", false, getClass().getClassLoader());
             return true;
+//            return false;
         } catch (ClassNotFoundException classNotFoundException) {
             return false;
         }
     }
 
+    /**
+     * 检查参数是否有错
+     * @param argName 提示的参数名字
+     * @param argValue 待检查参数
+     * @throws NullPointerException
+     */
     private void checkArgumentNotNull(String argName, Object argValue) throws NullPointerException {
         if (argValue == null) {
             throw new NullPointerException(argName + " must not be null");
         }
     }
 
+    /**
+     * 检查参数<code>condition</code>是否为true
+     * @param argName
+     * @param condition
+     * @param message
+     * @throws IllegalArgumentException
+     */
     private void checkArgument(String argName, boolean condition, String message) throws IllegalArgumentException {
         if (!condition) {
             throw new IllegalArgumentException(argName + " " + message);
         }
     }
 
+    /**
+     * 判断参数<code>profileDir</code>是否是一个合法的目录
+     * @param profileDir
+     * @return
+     */
     private boolean isValidProfileDir(File profileDir) {
         return new File(profileDir, "user").isDirectory();
     }

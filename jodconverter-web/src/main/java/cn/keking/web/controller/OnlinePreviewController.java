@@ -27,6 +27,16 @@ import java.util.List;
 /**
  * @author yudian-it
  */
+
+
+/**
+ * Author：houzheng
+ * Date：11-18
+ * 联机预览控制器
+ * 实现联机预览功能
+ *
+ */
+
 @Controller
 public class OnlinePreviewController {
 
@@ -40,6 +50,12 @@ public class OnlinePreviewController {
 
     private final DownloadUtils downloadUtils;
 
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 构造器，四个属性
+     *
+     */
     public OnlinePreviewController(FilePreviewFactory filePreviewFactory,
                                    FileUtils fileUtils,
                                    CacheService cacheService,
@@ -57,6 +73,12 @@ public class OnlinePreviewController {
      * 再调用其filePreviewHandle()方法进行文件解析转换
      */
     @RequestMapping(value = "/onlinePreview")
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 联机预览
+     *
+     */
     public String onlinePreview(String url, Model model, HttpServletRequest req) {
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
@@ -68,6 +90,12 @@ public class OnlinePreviewController {
     }
 
     @RequestMapping(value = "picturesPreview")
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 图片预览
+     *
+     */
     public String picturesPreview(Model model, HttpServletRequest req) throws UnsupportedEncodingException {
         String urls = req.getParameter("urls");
         String currentUrl = req.getParameter("currentUrl");

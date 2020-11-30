@@ -35,6 +35,9 @@ public interface ProcessManager {
     void kill(Process process, long pid) throws IOException;
 
     /**
+     * @author 庞新程
+     * 查找进程的id
+     * @param query
      * @return the pid if found, {@link #PID_NOT_FOUND} if not,
      * or {@link #PID_UNKNOWN} if this implementation is unable to find out
      */

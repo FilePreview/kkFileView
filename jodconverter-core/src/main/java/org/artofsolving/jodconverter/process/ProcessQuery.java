@@ -12,10 +12,14 @@
 //
 package org.artofsolving.jodconverter.process;
 
+/**
+ * @author 庞新程
+ * 进程查询
+ */
 public class ProcessQuery {
 
-    private final String command;
-    private final String argument;
+    private final String command;//命令
+    private final String argument;//参数
 
     public ProcessQuery(String command, String argument) {
         this.command = command;

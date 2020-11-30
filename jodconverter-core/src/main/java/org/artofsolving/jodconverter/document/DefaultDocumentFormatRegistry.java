@@ -16,16 +16,33 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author 庞新程
+ * 默认的文档注册表(配置了对各种文件的支持)
+ */
 public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry {
 
+	/**
+	 * @author 庞新程
+	 * 配置了对各种文件格式的支持
+	 */
 	public DefaultDocumentFormatRegistry() {
+
+		/**
+		 * @author 庞新程
+		 * 对pdf文件的配置
+		 */
 		DocumentFormat pdf = new DocumentFormat("Portable Document Format", "pdf", "application/pdf");
 		pdf.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "writer_pdf_Export"));
 		pdf.setStoreProperties(DocumentFamily.SPREADSHEET, Collections.singletonMap("FilterName", "calc_pdf_Export"));
 		pdf.setStoreProperties(DocumentFamily.PRESENTATION, Collections.singletonMap("FilterName", "impress_pdf_Export"));
 		pdf.setStoreProperties(DocumentFamily.DRAWING, Collections.singletonMap("FilterName", "draw_pdf_Export"));
 		addFormat(pdf);
-		
+
+		/**
+		 * @author 庞新程
+		 * 对Flash文件的配置
+		 */
 		DocumentFormat swf = new DocumentFormat("Macromedia Flash", "swf", "application/x-shockwave-flash");
 		swf.setStoreProperties(DocumentFamily.PRESENTATION, Collections.singletonMap("FilterName", "impress_flash_Export"));
 		swf.setStoreProperties(DocumentFamily.DRAWING, Collections.singletonMap("FilterName", "draw_flash_Export"));
@@ -38,6 +55,10 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
 		//xhtml.setStoreProperties(DocumentFamily.PRESENTATION, Collections.singletonMap("FilterName", "XHTML Impress File"));
 		//addFormat(xhtml);
 
+		/**
+		 * @author 庞新程
+		 * 对HTML文件的配置
+		 */
 		DocumentFormat html = new DocumentFormat("HTML", "html", "text/html");
         // HTML is treated as Text when supplied as input, but as an output it is also
         // available for exporting Spreadsheet and Presentation formats
@@ -46,35 +67,62 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
 		html.setStoreProperties(DocumentFamily.SPREADSHEET, Collections.singletonMap("FilterName", "HTML (StarCalc)"));
 		html.setStoreProperties(DocumentFamily.PRESENTATION, Collections.singletonMap("FilterName", "impress_html_Export"));
 		addFormat(html);
-
+		/**
+		 * @author 庞新程
+		 * 对odt文档的配置
+		 */
 		DocumentFormat odt = new DocumentFormat("OpenDocument Text", "odt", "application/vnd.oasis.opendocument.text");
 		odt.setInputFamily(DocumentFamily.TEXT);
 		odt.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "writer8"));
 		addFormat(odt);
 
+		/**
+		 * @author 庞新程
+		 * 对sxw文档的配置
+		 */
 		DocumentFormat sxw = new DocumentFormat("OpenOffice.org 1.0 Text Document", "sxw", "application/vnd.sun.xml.writer");
 		sxw.setInputFamily(DocumentFamily.TEXT);
 		sxw.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "StarOffice XML (Writer)"));
 		addFormat(sxw);
 
+		/**
+		 * @author 庞新程
+		 * 对doc文档的支持
+		 */
 		DocumentFormat doc = new DocumentFormat("Microsoft Word", "doc", "application/msword");
 		doc.setInputFamily(DocumentFamily.TEXT);
 		doc.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "MS Word 97"));
 		addFormat(doc);
 
+		/**
+		 * @author 庞新程
+		 * 对docx文档的支持
+		 */
 		DocumentFormat docx = new DocumentFormat("Microsoft Word 2007 XML", "docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 		docx.setInputFamily(DocumentFamily.TEXT);
         addFormat(docx);
 
+		/**
+		 * @author 庞新程
+		 * 对rtf文档的支持
+		 */
 		DocumentFormat rtf = new DocumentFormat("Rich Text Format", "rtf", "text/rtf");
 		rtf.setInputFamily(DocumentFamily.TEXT);
 		rtf.setStoreProperties(DocumentFamily.TEXT, Collections.singletonMap("FilterName", "Rich Text Format"));
 		addFormat(rtf);
 
+		/**
+		 * @author 庞新程
+		 * 对wpd文档的支持
+		 */
 		DocumentFormat wpd = new DocumentFormat("WordPerfect", "wpd", "application/wordperfect");
 		wpd.setInputFamily(DocumentFamily.TEXT);
 		addFormat(wpd);
 
+		/**
+		 * @author 庞新程
+		 * 对纯文本文档的支持
+		 */
 		DocumentFormat txt = new DocumentFormat("Plain Text", "txt", "text/plain");
 		txt.setInputFamily(DocumentFamily.TEXT);
 		Map<String,Object> txtLoadAndStoreProperties = new LinkedHashMap<String,Object>();
@@ -157,3 +205,4 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
   	}
 
 }
+

@@ -15,10 +15,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
     /**
-     *
+     * Author：houzheng
+     * Date：11-18
      * 访问外部文件配置
      */
     @Override
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 添加资源处理程序
+     *
+     */
+
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String filePath = ConfigConstants.getFileDir();
         LOGGER.info("Add resource locations: {}", filePath);

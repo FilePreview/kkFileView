@@ -13,10 +13,24 @@ import java.util.Set;
  * @author yudian-it
  * @date 2017/11/30
  */
+
+
+/**
+ * Author：houzheng
+ * Date：11-18
+ * 过滤器配置
+ * 对url过滤器，中文路径过滤器，信任主机过滤器，以及水印配置过滤器进行配置
+ *
+ */
 @Configuration
 public class FilterConfiguration {
 
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     *中文路径过滤器相应bean
+     *
+     */
     @Bean
     public FilterRegistrationBean getChinesePathFilter() {
         ChinesePathFilter filter = new ChinesePathFilter();
@@ -24,7 +38,12 @@ public class FilterConfiguration {
         registrationBean.setFilter(filter);
         return registrationBean;
     }
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 信任主机过滤器响应bean
+     *
+     */
     @Bean
     public FilterRegistrationBean getTrustHostFilter() {
         Set<String> filterUri = new HashSet<>();
@@ -38,7 +57,12 @@ public class FilterConfiguration {
         registrationBean.setUrlPatterns(filterUri);
         return registrationBean;
     }
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * url过滤器响应bean
+     *
+     */
     @Bean
     public FilterRegistrationBean getBaseUrlFilter() {
         Set<String> filterUri = new HashSet<>();
@@ -51,7 +75,12 @@ public class FilterConfiguration {
         registrationBean.setUrlPatterns(filterUri);
         return registrationBean;
     }
-
+    /**
+     * Author：houzheng
+     * Date：11-18
+     * 水印配置过滤器响应bean
+     *
+     */
     @Bean
     public FilterRegistrationBean getWatermarkConfigFilter() {
         Set<String> filterUri = new HashSet<>();
