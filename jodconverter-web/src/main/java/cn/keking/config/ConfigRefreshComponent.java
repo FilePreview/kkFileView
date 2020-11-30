@@ -17,6 +17,13 @@ import java.util.Properties;
  * @description 每隔1s读取并更新一次配置文件
  */
 @Component
+/**
+ * Author:houzheng
+ * Date:11-18
+ * 配置刷新组件
+ * 每1s读取并更新一次配置文件
+ *
+ */
 public class ConfigRefreshComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigRefreshComponent.class);
@@ -27,6 +34,12 @@ public class ConfigRefreshComponent {
         configRefreshThread.start();
     }
 
+    /**
+     * Author:houzheng
+     * Date:11-18
+     * Descripton：配置刷新
+     *
+     */
     static class ConfigRefreshThread implements Runnable {
         @Override
         public void run() {
@@ -82,6 +95,13 @@ public class ConfigRefreshComponent {
             }
         }
 
+        /**
+         * Author：houzheng
+         * Date：11-18
+         * Description：设置水印配置
+         *
+         * @param properties
+         */
         private void setWatermarkConfig(Properties properties) {
             String watermarkTxt = properties.getProperty("watermark.txt", WatermarkConfigConstants.DEFAULT_WATERMARK_TXT);
             String watermarkXSpace = properties.getProperty("watermark.x.space", WatermarkConfigConstants.DEFAULT_WATERMARK_X_SPACE);
