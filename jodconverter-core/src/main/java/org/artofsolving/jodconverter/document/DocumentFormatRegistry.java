@@ -14,11 +14,6 @@ package org.artofsolving.jodconverter.document;
 
 import java.util.Set;
 
-/**
- * 文件格式注册
- */
-public interface DocumentFormatRegistry {
-
 /*
  * @author 庞新程
  * 文件格式注册表接口
@@ -47,6 +42,5 @@ public interface DocumentFormatRegistry {
      * @param family 不知道
      * @return 文件格式类的集合
      */
-    public Set<DocumentFormat> getOutputFormats(DocumentFamily family); 
-
+    public Set<DocumentFormat> getOutputFormats(DocumentFamily family);
 }
