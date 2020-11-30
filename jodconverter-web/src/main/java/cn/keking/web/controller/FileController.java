@@ -31,6 +31,7 @@ import java.util.Objects;
  * Date：11-18
  * 文件控制器
  * 执行对文件的基本操作：上传，删除，下载，搜索是否存在目标文件
+ * 所有的操作都是对src/main/file/demo目录下操作
  *
  */
 
@@ -45,6 +46,12 @@ public class FileController {
 
     private final String demoPath = demoDir + File.separator;
 
+    /**
+     * author:Qin Huihuang date:2020-11-26
+     *
+     * 由于后台没有服务器，因此上传文件只是简单地把本地某个目录下的文件复制到
+     * jodconverter-web/src/main/file/demo目录下
+     */
     @RequestMapping(value = "fileUpload", method = RequestMethod.POST)
     /**
      * Author：houzheng
@@ -52,7 +59,6 @@ public class FileController {
      * 文档上传
      *
      */
-
     public String fileUpload(@RequestParam("file") MultipartFile file) throws JsonProcessingException {
         // 获取文件名
         String fileName = file.getOriginalFilename();
@@ -77,6 +83,10 @@ public class FileController {
         logger.info("上传文件：{}", fileDir + demoPath + fileName);
         try(InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(fileDir + demoPath + fileName)) {
             StreamUtils.copy(in, out);
+            /*
+             * author : Qin Huihaung date:2020-11-26
+             * 以字符串的形式返回Json串{"code":0,"msg":"SUCCESS","content":null}
+             */
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
         } catch (IOException e) {
             logger.error("文件上传失败", e);
@@ -91,7 +101,6 @@ public class FileController {
      * 删除文件
      *
      */
-
     public String deleteFile(String fileName) throws JsonProcessingException {
         if (fileName.contains("/")) {
             fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
@@ -111,13 +120,16 @@ public class FileController {
      * 获取文件
      *
      */
-
     public String getFiles() throws JsonProcessingException {
         List<Map<String, String>> list = Lists.newArrayList();
         File file = new File(fileDir + demoPath);
         if (file.exists()) {
             Arrays.stream(Objects.requireNonNull(file.listFiles())).forEach(file1 -> list.add(ImmutableMap.of("fileName", demoDir + "/" + file1.getName())));
         }
+        /*
+         * author : Qin Huihuang date:2020-11-26
+         * 返回数据格式 : [{"fileName":"demo/Exercise4.pdf"},{"fileName":"demo/Spring Security.docx"}]
+         */
         return new ObjectMapper().writeValueAsString(list);
     }
     /**
@@ -126,7 +138,6 @@ public class FileController {
      * 是否存在文件
      *
      */
-
     private boolean existsFile(String fileName) {
         File file = new File(fileDir + demoPath + fileName);
         return file.exists();

@@ -1,3 +1,4 @@
+
 //
 // JODConverter - Java OpenDocument Converter
 // Copyright 2004-2012 Mirko Nasato and contributors
@@ -17,6 +18,9 @@ import java.io.File;
 import org.artofsolving.jodconverter.process.ProcessManager;
 import org.artofsolving.jodconverter.process.PureJavaProcessManager;
 
+/**
+ * Open Office 启动时相关属性的配置
+ */
 class ManagedOfficeProcessSettings {
 
     public static final long DEFAULT_RETRY_INTERVAL = 250L;
@@ -95,3 +99,4 @@ class ManagedOfficeProcessSettings {
     }
 
 }
+

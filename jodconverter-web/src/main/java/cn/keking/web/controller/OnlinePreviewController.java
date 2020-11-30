@@ -10,6 +10,7 @@ import cn.keking.utils.DownloadUtils;
 import cn.keking.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +66,12 @@ public class OnlinePreviewController {
         this.downloadUtils = downloadUtils;
     }
 
-
+    /**
+     * author: Qin Huihuang date:2020-11-29
+     * 负责处理预览文件，真正负责处理预览文件的是FilePreview接口
+     * 根据文件的类型返回相应的FilePreview接口的实现类
+     * 再调用其filePreviewHandle()方法进行文件解析转换
+     */
     @RequestMapping(value = "/onlinePreview")
     /**
      * Author：houzheng

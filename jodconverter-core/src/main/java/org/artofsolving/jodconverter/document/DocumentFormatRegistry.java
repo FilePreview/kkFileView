@@ -15,6 +15,11 @@ package org.artofsolving.jodconverter.document;
 import java.util.Set;
 
 /**
+ * 文件格式注册
+ */
+public interface DocumentFormatRegistry {
+
+/*
  * @author 庞新程
  * 文件格式注册表接口
  */

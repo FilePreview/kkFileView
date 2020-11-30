@@ -35,6 +35,7 @@ public class Convert {
     public static final int STATUS_MISSING_INPUT_FILE = 1;
     public static final int STATUS_INVALID_ARGUMENTS = 255;
 
+
     /**
      * @author 庞新程
      * 命令行相关的option
@@ -43,7 +44,6 @@ public class Convert {
      * hasArg: 表示是否支持额外的输入
      * description: 一个描述
      */
-    //输出格式的参数
     private static final Option OPTION_OUTPUT_FORMAT = new Option("o", "output-format", true, "output format (e.g. pdf)");
 
     /**
@@ -98,7 +98,6 @@ public class Convert {
          * 使用命令行解析器解析arguments
          */
         CommandLine commandLine = commandLineParser.parse(OPTIONS, arguments);
-
         String outputFormat = null;
 
         /**
@@ -123,12 +122,24 @@ public class Convert {
             port = Integer.parseInt(commandLine.getOptionValue(OPTION_PORT.getOpt()));
         }
 
-        /**
-         * @author 庞新程
-         * 未识别的参数(一个输入文件, 一个输出文件)
+        /*
+         * author: Qin Huihuang Date:2020-11-24
+         *
+         * Retrieve any left-over non-recognized options and arguments
+         * case1:
+         *      the first fileName: the input file name
+         *      the second fileName: where the output file locates
+         *
+         * case2:
+         *      input-file [input-file...]
          */
         String[] fileNames = commandLine.getArgs();
         if ((outputFormat == null && fileNames.length != 2) || fileNames.length < 1) {
+            /*
+             * author: Qin Huihuang  Date:2020-11-24
+             * Print the help for options with the specified command line syntax.
+             * This method prints help information to System.out.
+             */
             String syntax = "java -jar jodconverter-core.jar [options] input-file output-file\n"
                     + "or [options] -o output-format input-file [input-file...]";
             HelpFormatter helpFormatter = new HelpFormatter();

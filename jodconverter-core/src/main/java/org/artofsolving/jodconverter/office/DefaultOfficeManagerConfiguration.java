@@ -32,9 +32,10 @@ public class DefaultOfficeManagerConfiguration {
      */
     public static final long DEFAULT_RETRY_TIMEOUT = 120000L;
 
-    /**
-     * officeHome的默认路径
-     * @author 庞新程
+
+    /*
+     * author:Qin Huihuang date:2020-11-24
+     * 找到open office的安装目录
      */
     private File officeHome = OfficeUtils.getDefaultOfficeHome();
 
@@ -277,12 +278,17 @@ public class DefaultOfficeManagerConfiguration {
             processManager = findBestProcessManager();
         }
 
-        
+        /*
+         * numInstances基本为1
+         */
         int numInstances = connectionProtocol == OfficeConnectionProtocol.PIPE ? pipeNames.length : portNumbers.length;
         UnoUrl[] unoUrls = new UnoUrl[numInstances];
         for (int i = 0; i < numInstances; i++) {
             unoUrls[i] = (connectionProtocol == OfficeConnectionProtocol.PIPE) ? UnoUrl.pipe(pipeNames[i]) : UnoUrl.socket(portNumbers[i]);
         }
+        /*
+         * 创建一个OfficeManager负责管理OfficeTask
+         */
         return new ProcessPoolOfficeManager(officeHome, unoUrls, runAsArgs, templateProfileDir, workDir, retryTimeout, taskQueueTimeout, taskExecutionTimeout, maxTasksPerProcess, processManager);
     }
 

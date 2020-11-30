@@ -22,7 +22,9 @@ import java.util.logging.Logger;
 
 class ProcessPoolOfficeManager implements OfficeManager {
 
+
     private final BlockingQueue<PooledOfficeManager> pool;//阻塞队列
+
     private final PooledOfficeManager[] pooledManagers;
     private final long taskQueueTimeout;
 

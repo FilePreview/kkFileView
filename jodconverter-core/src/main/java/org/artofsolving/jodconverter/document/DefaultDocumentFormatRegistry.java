@@ -67,7 +67,6 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
 		html.setStoreProperties(DocumentFamily.SPREADSHEET, Collections.singletonMap("FilterName", "HTML (StarCalc)"));
 		html.setStoreProperties(DocumentFamily.PRESENTATION, Collections.singletonMap("FilterName", "impress_html_Export"));
 		addFormat(html);
-
 		/**
 		 * @author 庞新程
 		 * 对odt文档的配置
@@ -160,6 +159,7 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
         csv.setInputFamily(DocumentFamily.SPREADSHEET);
         Map<String,Object> csvLoadAndStoreProperties = new LinkedHashMap<String,Object>();
         csvLoadAndStoreProperties.put("FilterName", "Text - txt - csv (StarCalc)");
+        // csv文件有一个格外的属性 FilterOptions
         csvLoadAndStoreProperties.put("FilterOptions", "44,34,0");  // Field Separator: ','; Text Delimiter: '"' 
         csv.setLoadProperties(csvLoadAndStoreProperties);
         csv.setStoreProperties(DocumentFamily.SPREADSHEET, csvLoadAndStoreProperties);
@@ -169,6 +169,7 @@ public class DefaultDocumentFormatRegistry extends SimpleDocumentFormatRegistry 
         tsv.setInputFamily(DocumentFamily.SPREADSHEET);
         Map<String,Object> tsvLoadAndStoreProperties = new LinkedHashMap<String,Object>();
         tsvLoadAndStoreProperties.put("FilterName", "Text - txt - csv (StarCalc)");
+        // tsv文件也有一个格外的属性 FilterOptions
         tsvLoadAndStoreProperties.put("FilterOptions", "9,34,0");  // Field Separator: '\t'; Text Delimiter: '"' 
         tsv.setLoadProperties(tsvLoadAndStoreProperties);
         tsv.setStoreProperties(DocumentFamily.SPREADSHEET, tsvLoadAndStoreProperties);

@@ -12,6 +12,10 @@
 //
 package org.artofsolving.jodconverter.util;
 
+/**
+ * author: Qin Huihuang date:2020-11-24
+ * 判断是何种操作系统
+ */
 public class PlatformUtils {
 
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
@@ -31,5 +35,4 @@ public class PlatformUtils {
     public static boolean isWindows() {
         return OS_NAME.startsWith("windows");
     }
-
 }

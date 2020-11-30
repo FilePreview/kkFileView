@@ -1,3 +1,4 @@
+
 //
 // JODConverter - Java OpenDocument Converter
 // Copyright 2004-2012 Mirko Nasato and contributors
@@ -68,12 +69,21 @@ public class OfficeUtils {
 
     public static File getDefaultOfficeHome() {
         Properties properties = new Properties();
+        /*
+         * author: Qin Huihuang date:2020-11-24
+         * 配置文件的路径,具体来说就是jodconveter-web/src/main/config/application.properties
+         */
         String customizedConfigPath = getCustomizedConfigPath();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(customizedConfigPath));
             properties.load(bufferedReader);
             restorePropertiesFromEnvFormat(properties);
         } catch (Exception e) {}
+        /*
+         * author:Qin Huihuang date:2020-11-24
+         *
+         * 从配置文件中读取的office.home属性，其值就是default
+         */
         String officeHome = properties.getProperty(OFFICE_HOME_KEY);
         if (officeHome != null && !DEFAULT_OFFICE_HOME_VALUE.equals(officeHome)) {
             return new File(officeHome);
@@ -85,6 +95,14 @@ public class OfficeUtils {
             if (programFiles == null) {
                 programFiles = System.getenv("ProgramFiles");
             }
+            /*
+             * author: Qin Huihuang Date:2020-11-24
+             *
+             * officeHome是openOffice的安装位置
+             * 具体来说从ProgramFiles(x86)/OpenOffice 4，Program/LibreOffice 4，
+             * jodconverter-web/src/main/office三个目录中找
+             * 最后返回的是jodcoverter-web/src/main/office/program/soffice.bin
+             */
             return findOfficeHome(
                 programFiles + File.separator + "OpenOffice 4",
                 programFiles + File.separator + "LibreOffice 4",
@@ -127,9 +145,19 @@ public class OfficeUtils {
         }
     }
 
+    /**
+     * author: Qin Huihuang Date:2020-11-24
+     * @return the file path of the jodconverter-WEB
+     * eg: D:\Project\kkFileView\jodconverter-web\src\main
+     */
     public static String getHomePath() {
         String userDir = System.getenv("KKFILEVIEW_BIN_FOLDER");
         if (userDir == null) {
+            /*
+             * author: Qin Huihuang Date:2020-11-24
+             *
+             * 获得当前工程文件路径
+             */
             userDir = System.getProperty("user.dir");
         }
         if (userDir.endsWith("bin")) {
@@ -181,3 +209,4 @@ public class OfficeUtils {
     }
 
 }
+
