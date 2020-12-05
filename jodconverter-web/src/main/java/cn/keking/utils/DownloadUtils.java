@@ -191,15 +191,18 @@ public class DownloadUtils {
       if(encoding != null && !"UTF-8".equals(encoding)){
         // 不为utf8,进行转码
         File tmpUtf8File = new File(filePath+".utf8");
-        Writer writer = new OutputStreamWriter(new FileOutputStream(tmpUtf8File), StandardCharsets.UTF_8);
-        Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile),encoding));
-        char[] buf = new char[1024];
-        int read;
-        while ((read = reader.read(buf)) > 0){
-          writer.write(buf, 0, read);
+
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpUtf8File), StandardCharsets.UTF_8);
+          Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile), encoding))){
+
+            char[] buf = new char[1024];
+            int read;
+            while ((read = reader.read(buf)) > 0) {
+                writer.write(buf, 0, read);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-        reader.close();
-        writer.close();
         // 删除源文件
         sourceFile.delete();
         // 重命名

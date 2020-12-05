@@ -59,8 +59,7 @@ public class ZipReader {
         List<String> imgUrls = Lists.newArrayList();
         String baseUrl = BaseUrlFilter.getBaseUrl();
         String archiveFileName = fileUtils.getFileNameFromPath(filePath);
-        try {
-            ZipFile zipFile = new ZipFile(filePath, fileUtils.getFileEncodeUTFGBK(filePath));
+        try (ZipFile zipFile = new ZipFile(filePath, fileUtils.getFileEncodeUTFGBK(filePath))){
             /*
              *Author:FanPan Date:2020-11-22
              *一个zipEntry就是一个子目录或一个zip文件
@@ -134,8 +133,8 @@ public class ZipReader {
         Map<String, FileNode> appender = Maps.newHashMap();
         List<String> imgUrls = Lists.newArrayList();
         String baseUrl = BaseUrlFilter.getBaseUrl();
-        try {
-            Archive archive = new Archive(new FileInputStream(new File(filePath)));
+        try (Archive archive = new Archive(new FileInputStream(new File(filePath)))){
+
             List<FileHeader> headers = archive.getFileHeaders();
             headers = sortedHeaders(headers);
             String archiveFileName = fileUtils.getFileNameFromPath(filePath);
@@ -187,8 +186,8 @@ public class ZipReader {
         List<String> imgUrls = Lists.newArrayList();
         String baseUrl= BaseUrlFilter.getBaseUrl();
         String archiveFileName = fileUtils.getFileNameFromPath(filePath);
-        try {
-            SevenZFile zipFile = new SevenZFile(new File(filePath));
+        try(SevenZFile zipFile = new SevenZFile(new File(filePath))) {
+
             Iterable<SevenZArchiveEntry> entries = zipFile.getEntries();
             // 排序
             Enumeration<SevenZArchiveEntry> newEntries = sortSevenZEntries(entries);
@@ -502,8 +501,8 @@ public class ZipReader {
          */
         @Override
         public void run() {
-            try {
-                SevenZFile sevenZFile = new SevenZFile(new File(filePath));
+            try (SevenZFile sevenZFile = new SevenZFile(new File(filePath));){
+
                 SevenZArchiveEntry entry = sevenZFile.getNextEntry();
                 while (entry != null) {
                     if (entry.isDirectory()) {
@@ -519,12 +518,16 @@ public class ZipReader {
                             break;
                         }
                     }
-                    FileOutputStream out = new FileOutputStream(fileDir + childName);
-                    byte[] content = new byte[(int) entry.getSize()];
-                    sevenZFile.read(content, 0, content.length);
-                    out.write(content);
-                    out.close();
-                    entry = sevenZFile.getNextEntry();
+                    try(FileOutputStream out = new FileOutputStream(fileDir + childName)) {
+
+                        byte[] content = new byte[(int) entry.getSize()];
+                        sevenZFile.read(content, 0, content.length);
+                        out.write(content);
+                        out.close();
+                        entry = sevenZFile.getNextEntry();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
                 sevenZFile.close();
             } catch (IOException e) {

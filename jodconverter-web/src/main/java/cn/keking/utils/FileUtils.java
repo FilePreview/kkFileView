@@ -230,16 +230,16 @@ public class FileUtils {
     public String getFileEncodeUTFGBK(String path){
         String enc = Charset.forName("GBK").name();
         File file = new File(path);
-        InputStream in;
-        try {
-            in = new FileInputStream(file);
+
+        try ( InputStream in= new FileInputStream(file);) {
+
             byte[] b = new byte[3];
-            in.read(b);
+            int i = in.read(b);
             in.close();
             if (b[0] == -17 && b[1] == -69 && b[2] == -65) {
                 enc = StandardCharsets.UTF_8.name();
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("文件编码格式为:" + enc);
