@@ -73,24 +73,25 @@ public abstract class AbstractConversionTask implements OfficeTask {
         }
     }
 
-    private XComponent loadDocument(OfficeContext context, File inputFile) throws OfficeException {
+    private XComponent loadDocument(OfficeContext context, File inputFile) {
         if (!inputFile.exists()) {
             throw new OfficeException("input document not found");
         }
         XComponentLoader loader = cast(XComponentLoader.class, context.getService(SERVICE_DESKTOP));
         Map<String,?> loadProperties = getLoadProperties(inputFile);
         XComponent document = null;
+        String errorMessage = "could not load document: ";
         try {
             document = loader.loadComponentFromURL(toUrl(inputFile), "_blank", 0, toUnoProperties(loadProperties));
         } catch (IllegalArgumentException illegalArgumentException) {
-            throw new OfficeException("could not load document: " + inputFile.getName(), illegalArgumentException);
+            throw new OfficeException(errorMessage + inputFile.getName(), illegalArgumentException);
         } catch (ErrorCodeIOException errorCodeIOException) {
-            throw new OfficeException("could not load document: "  + inputFile.getName() + "; errorCode: " + errorCodeIOException.ErrCode, errorCodeIOException);
+            throw new OfficeException(errorMessage  + inputFile.getName() + "; errorCode: " + errorCodeIOException.ErrCode, errorCodeIOException);
         } catch (IOException ioException) {
-            throw new OfficeException("could not load document: "  + inputFile.getName(), ioException);
+            throw new OfficeException(errorMessage  + inputFile.getName(), ioException);
         }
         if (document == null) {
-            throw new OfficeException("could not load document: "  + inputFile.getName());
+            throw new OfficeException(errorMessage  + inputFile.getName());
         }
         return document;
     }
@@ -104,11 +105,11 @@ public abstract class AbstractConversionTask implements OfficeTask {
      * @param document
      * @throws OfficeException
      */
-    protected void modifyDocument(XComponent document) throws OfficeException {
-    	// noop
+    protected void modifyDocument(XComponent document){
+
     }
 
-    private void storeDocument(XComponent document, File outputFile) throws OfficeException {
+    private void storeDocument(XComponent document, File outputFile) {
         Map<String,?> storeProperties = getStoreProperties(outputFile, document);
         if (storeProperties == null) {
             throw new OfficeException("unsupported conversion");

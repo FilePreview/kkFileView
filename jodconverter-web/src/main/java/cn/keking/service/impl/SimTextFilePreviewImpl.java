@@ -1,5 +1,6 @@
 package cn.keking.service.impl;
 
+import cn.keking.markdown.MarkdownParser;
 import cn.keking.model.FileAttribute;
 import cn.keking.model.ReturnResponse;
 import cn.keking.service.FilePreview;
@@ -27,6 +28,9 @@ public class SimTextFilePreviewImpl implements FilePreview {
     @Override
     public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute){
         String fileName = fileAttribute.getName();
+        /*
+         * 模拟的下载过程太鸡肋了
+         */
         ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, fileName);
         if (0 != response.getCode()) {
             model.addAttribute("msg", response.getMsg());
@@ -35,18 +39,34 @@ public class SimTextFilePreviewImpl implements FilePreview {
         }
         try {
             File originFile = new File(response.getContent());
-            File previewFile = new File(response.getContent() + ".txt");
-            if (previewFile.exists()) {
-                previewFile.delete();
-            }
-            Files.copy(originFile.toPath(), previewFile.toPath());
+            int index = response.getContent().lastIndexOf(".");
+            String name = response.getContent().substring(0,index+1);
+            File previewFile = new File(name + "html");
+            MarkdownParser.parse(originFile,previewFile);
+
         } catch (IOException e) {
             model.addAttribute("msg", e.getLocalizedMessage());
             model.addAttribute("fileType",fileAttribute.getSuffix());
             return "fileNotSupported";
         }
         model.addAttribute("ordinaryUrl", response.getMsg());
+        System.out.println(response.getMsg());
+        printCallStatck();
         return "txt";
+    }
+
+    public static void printCallStatck() {
+        Throwable ex = new Throwable();
+        StackTraceElement[] stackElements = ex.getStackTrace();
+        if (stackElements != null) {
+            for (int i = 0; i < stackElements.length; i++) {
+                System.out.print(stackElements[i].getClassName()+"/t");
+                System.out.print(stackElements[i].getFileName()+"/t");
+                System.out.print(stackElements[i].getLineNumber()+"/t");
+                System.out.println(stackElements[i].getMethodName());
+                System.out.println("-----------------------------------");
+            }
+        }
     }
 
 }

@@ -27,7 +27,7 @@ class OfficeDocumentUtils {
         throw new AssertionError("utility class must not be instantiated");
     }
 
-    public static DocumentFamily getDocumentFamily(XComponent document) throws OfficeException {
+    public static DocumentFamily getDocumentFamily(XComponent document) {
         XServiceInfo serviceInfo = cast(XServiceInfo.class, document);
         if (serviceInfo.supportsService("com.sun.star.text.GenericTextDocument")) {
             // NOTE: a GenericTextDocument is either a TextDocument, a WebDocument, or a GlobalDocument
