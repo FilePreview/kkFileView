@@ -70,16 +70,21 @@ public class FtpUtils {
         String remoteFilePath = url.getPath();
         LOGGER.debug("FTP connection url:{}, username:{}, password:{}, controlEncoding:{}, localFilePath:{}", ftpUrl, username, password, controlEncoding, localFilePath);
         FTPClient ftpClient = connect(host, port, username, password, controlEncoding);
-        OutputStream outputStream = new FileOutputStream(localFilePath);
-        ftpClient.enterLocalPassiveMode();
-        /*
-         * Author:FanPan Date:2020-11-19
-         * 绑定输出流下载文件,需要设置编码集，不然可能出现文件为空的情况
-         */
-        boolean downloadResult = ftpClient.retrieveFile(new String(remoteFilePath.getBytes(controlEncoding), StandardCharsets.ISO_8859_1), outputStream);
-        LOGGER.debug("FTP download result {}", downloadResult);
-        outputStream.flush();
-        outputStream.close();
+
+        try( OutputStream outputStream = new FileOutputStream(localFilePath);) {
+
+            ftpClient.enterLocalPassiveMode();
+            /*
+             * Author:FanPan Date:2020-11-19
+             * 绑定输出流下载文件,需要设置编码集，不然可能出现文件为空的情况
+             */
+            boolean downloadResult = ftpClient.retrieveFile(new String(remoteFilePath.getBytes(controlEncoding), StandardCharsets.ISO_8859_1), outputStream);
+            LOGGER.debug("FTP download result {}", downloadResult);
+            outputStream.flush();
+            outputStream.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         ftpClient.logout();
         ftpClient.disconnect();
     }
