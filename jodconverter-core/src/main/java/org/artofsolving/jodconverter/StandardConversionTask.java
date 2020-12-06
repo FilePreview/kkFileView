@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.artofsolving.jodconverter.document.DocumentFamily;
 import org.artofsolving.jodconverter.document.DocumentFormat;
-import org.artofsolving.jodconverter.office.OfficeException;
 
 import com.sun.star.lang.XComponent;
 import com.sun.star.util.XRefreshable;
@@ -46,7 +45,7 @@ public class StandardConversionTask extends AbstractConversionTask {
     }
 
     @Override
-    protected void modifyDocument(XComponent document) throws OfficeException {
+    protected void modifyDocument(XComponent document) {
         XRefreshable refreshable = cast(XRefreshable.class, document);
         if (refreshable != null) {
             refreshable.refresh();

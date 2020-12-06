@@ -1,5 +1,8 @@
 package cn.keking.model;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+
 /**
  * Created by kl on 2018/1/17.
  * Content :文件类型，文本，office，压缩包等等
@@ -13,7 +16,6 @@ public enum FileType {
     other("otherFilePreviewImpl"),
     media("mediaFilePreviewImpl"),
     cad("cadFilePreviewImpl");
-
     private final String instanceName;
     /**
      * Author：houzheng

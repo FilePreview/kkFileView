@@ -1,16 +1,3 @@
-//
-//
-// JODConverter - Java OpenDocument Converter
-// Copyright 2004-2012 Mirko Nasato and contributors
-//
-// JODConverter is Open Source software, you can redistribute it and/or
-// modify it under either (at your option) of the following licenses
-//
-// 1. The GNU Lesser General Public License v3 (or later)
-//    -> http://www.gnu.org/licenses/lgpl-3.0.txt
-// 2. The Apache License, Version 2.0
-//    -> http://www.apache.org/licenses/LICENSE-2.0.txt
-//
 package org.artofsolving.jodconverter.office;
 
 import java.util.concurrent.ExecutionException;
@@ -62,7 +49,7 @@ class PooledOfficeManager implements OfficeManager {
         taskExecutor = new SuspendableThreadPoolExecutor(new NamedThreadFactory("OfficeTaskThread"));
     }
 
-    public void execute(final OfficeTask task) throws OfficeException {
+    public void execute(final OfficeTask task) {
         Future<?> futureTask = taskExecutor.submit(new Runnable() {
             public void run() {
                 if (settings.getMaxTasksPerProcess() > 0 && ++taskCount == settings.getMaxTasksPerProcess() + 1) {
@@ -70,7 +57,6 @@ class PooledOfficeManager implements OfficeManager {
                     taskExecutor.setAvailable(false);
                     stopping = true;
                     managedOfficeProcess.restartAndWait();
-                    //FIXME taskCount will be 0 rather than 1 at this point
                 }
                 task.execute(managedOfficeProcess.getConnection());
              }
@@ -92,11 +78,11 @@ class PooledOfficeManager implements OfficeManager {
          }
     }
 
-    public void start() throws OfficeException {
+    public void start() {
         managedOfficeProcess.startAndWait();
     }
 
-    public void stop() throws OfficeException {
+    public void stop() {
         taskExecutor.setAvailable(false);
         stopping = true;
         taskExecutor.shutdownNow();

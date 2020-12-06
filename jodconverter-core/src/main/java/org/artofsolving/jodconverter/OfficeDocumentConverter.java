@@ -21,7 +21,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.artofsolving.jodconverter.document.DefaultDocumentFormatRegistry;
 import org.artofsolving.jodconverter.document.DocumentFormat;
 import org.artofsolving.jodconverter.document.DocumentFormatRegistry;
-import org.artofsolving.jodconverter.office.OfficeException;
 import org.artofsolving.jodconverter.office.OfficeManager;
 
 import com.sun.star.document.UpdateDocMode;
@@ -61,13 +60,13 @@ public class OfficeDocumentConverter {
     /*
      * 将输入文件解析到输出文件
      */
-    public void convert(File inputFile, File outputFile) throws OfficeException {
+    public void convert(File inputFile, File outputFile) {
         String outputExtension = FilenameUtils.getExtension(outputFile.getName());
         DocumentFormat outputFormat = formatRegistry.getFormatByExtension(outputExtension);
         convert(inputFile, outputFile, outputFormat);
     }
 
-    public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) throws OfficeException {
+    public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) {
         String inputExtension = FilenameUtils.getExtension(inputFile.getName());
         DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
         StandardConversionTask conversionTask = new StandardConversionTask(inputFile, outputFile, outputFormat);
