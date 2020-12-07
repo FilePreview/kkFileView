@@ -45,10 +45,10 @@ public class OfficeFilePreviewImpl implements FilePreview {
     private static final String FILE_DIR = ConfigConstants.getFileDir();
 
     @Override
-    public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute) {
+    public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute) throws InterruptedException {
         // 预览Type，参数传了就取参数的，没传取系统默认
         String officePreviewType = model.asMap().get("officePreviewType") == null ? ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
-        String baseUrl = BaseUrlFilter.getBaseUrl();
+        String baseUrl = BaseUrlFilter.getBaseURL();
         String suffix=fileAttribute.getSuffix();
         String fileName=fileAttribute.getName();
         boolean isHtml = suffix.equalsIgnoreCase("xls") || suffix.equalsIgnoreCase("xlsx");
@@ -85,7 +85,7 @@ public class OfficeFilePreviewImpl implements FilePreview {
 
     static String getPreviewType(Model model, FileAttribute fileAttribute, String officePreviewType, String baseUrl, String pdfName, String outFilePath, PdfUtils pdfUtils, String officePreviewTypeImage) {
         List<String> imageUrls = pdfUtils.pdf2jpg(outFilePath, pdfName, baseUrl);
-        if (imageUrls == null || imageUrls.size() < 1) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
             model.addAttribute("msg", "office转图片异常，请联系管理员");
             model.addAttribute("fileType",fileAttribute.getSuffix());
             return "fileNotSupported";

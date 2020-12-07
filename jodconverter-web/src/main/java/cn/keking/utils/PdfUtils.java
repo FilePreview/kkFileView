@@ -57,8 +57,9 @@ public class PdfUtils {
             urlPrefix = baseUrl + pdfFolder;
         }
         if (imageCount != null && imageCount > 0) {
-            for (int i = 0; i < imageCount ; i++)
-            imageUrls.add(urlPrefix + "/" + i + imageFileSuffix);
+            for (int i = 0; i < imageCount ; i++){
+                imageUrls.add(urlPrefix + "/" + i + imageFileSuffix);
+            }
             return imageUrls;
         }
         /*

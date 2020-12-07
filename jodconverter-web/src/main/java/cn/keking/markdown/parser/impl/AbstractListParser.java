@@ -1,7 +1,7 @@
 package cn.keking.markdown.parser.impl;
 
 import cn.keking.markdown.constant.CONSTANT;
-import cn.keking.markdown.constant.magic.CHAR_SYMBOL;
+import cn.keking.markdown.constant.magic.CharSymbol;
 import cn.keking.markdown.mark.MarkContext;
 import cn.keking.markdown.mark.MarkEntity;
 import cn.keking.markdown.mark.TagListEntity;
@@ -20,7 +20,7 @@ public abstract class AbstractListParser implements MarkParser {
         markContext.skipPointer(1);
         do {
             String line = markContext.readLine(markContext.getCurrentPointer());
-            if (line.equals(CONSTANT.ENTER_TEXT_N) && markContext.getCurrentPointer() > 0 && markContext.getContent().charAt(markContext.getCurrentPointer() - 1) == CHAR_SYMBOL.ENTER) {
+            if (line.equals(CONSTANT.ENTER_TEXT_N) && markContext.getCurrentPointer() > 0 && markContext.getContent().charAt(markContext.getCurrentPointer() - 1) == CharSymbol.ENTER) {
                 markContext.skipPointer(line.length());
                 break;
             }

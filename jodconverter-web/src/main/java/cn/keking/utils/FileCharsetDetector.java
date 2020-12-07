@@ -9,6 +9,8 @@ import java.util.Observer;
 
 import org.mozilla.intl.chardet.nsDetector;
 import org.mozilla.intl.chardet.nsICharsetDetectionObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 文本文件编码探测工具类
@@ -18,6 +20,12 @@ import org.mozilla.intl.chardet.nsICharsetDetectionObserver;
  */
 public class FileCharsetDetector {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileCharsetDetector.class);
+
+  private FileCharsetDetector(){
+    throw new IllegalStateException("Utility class");
+  }
+
   /**
    * 传入一个文件(File)对象，检查文件编码
    *
@@ -26,8 +34,7 @@ public class FileCharsetDetector {
    * @throws FileNotFoundException
    * @throws IOException
    */
-  public static Observer guessFileEncoding(File file)
-      throws FileNotFoundException, IOException {
+  public static Observer guessFileEncoding(File file) {
     return guessFileEncoding(file, new nsDetector());
   }
 
@@ -50,8 +57,7 @@ public class FileCharsetDetector {
    * @throws FileNotFoundException
    * @throws IOException
    */
-  public static Observer guessFileEncoding(File file, int languageHint)
-      throws FileNotFoundException, IOException {
+  public static Observer guessFileEncoding(File file, int languageHint) {
     return guessFileEncoding(file, new nsDetector(languageHint));
   }
 
@@ -64,8 +70,7 @@ public class FileCharsetDetector {
    * @throws FileNotFoundException
    * @throws IOException
    */
-  private static Observer guessFileEncoding(File file, nsDetector det)
-      throws FileNotFoundException, IOException {
+  private static Observer guessFileEncoding(File file, nsDetector det) {
     // new Observer
     Observer observer = new Observer();
     // set Observer
@@ -96,7 +101,6 @@ public class FileCharsetDetector {
           break;
         }
       }
-      imp.close();
       det.DataEnd();
 
       if (isAscii) {
@@ -106,14 +110,6 @@ public class FileCharsetDetector {
 
       if (!observer.isFound()) {
         String[] prob = det.getProbableCharsets();
-        // // 这里将可能的字符集组合起来返回
-        // for (int i = 0; i < prob.length; i++) {
-        // if (i == 0) {
-        // encoding = prob[i];
-        // } else {
-        // encoding += "," + prob[i];
-        // }
-        // }
         if (prob.length > 0) {
           // 在没有发现情况下,去第一个可能的编码
           observer.encoding = prob[0];
@@ -122,7 +118,7 @@ public class FileCharsetDetector {
         }
       }
     }catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.info("Exception",e);
     }
     return observer;
   }

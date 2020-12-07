@@ -45,7 +45,11 @@
             type: 'GET',
             url: '${ordinaryUrl}',
             success: function (data) {
-                $("#text").append("<pre>"+data+"</pre>");
+                if(data.startsWith("<!<!DOCTYPE html>>")){
+                    $("#text").append("<pre>"+data+"</pre>");
+                }else{
+                    $("#text").append("<pre>"+data+"</pre>");
+                }
             }
         });
     }

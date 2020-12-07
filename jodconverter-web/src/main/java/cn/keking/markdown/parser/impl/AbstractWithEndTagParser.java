@@ -1,6 +1,6 @@
 package cn.keking.markdown.parser.impl;
 
-import cn.keking.markdown.constant.magic.CHAR_SYMBOL;
+import cn.keking.markdown.constant.magic.CharSymbol;
 import cn.keking.markdown.mark.MarkContext;
 import cn.keking.markdown.mark.MarkEntity;
 import cn.keking.markdown.parser.MarkParser;
@@ -30,7 +30,7 @@ public abstract class AbstractWithEndTagParser implements MarkParser {
         if (endMarkIndex <= 1) {
             return null;
         }
-        if (markContext.getContent().charAt(startIndex) == CHAR_SYMBOL.ENTER || markContext.getContent().charAt(endMarkIndex - 1) == '\n') {
+        if (markContext.getContent().charAt(startIndex) == CharSymbol.ENTER || markContext.getContent().charAt(endMarkIndex - 1) == '\n') {
             return null;
         }
 

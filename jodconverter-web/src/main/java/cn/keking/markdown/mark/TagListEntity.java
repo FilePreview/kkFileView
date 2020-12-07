@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagListEntity {
-    private List<TagListEntity> children=new ArrayList<TagListEntity>(16);
+    private List<TagListEntity> children=new ArrayList<>(16);
     private int indent;
     private TagListEntity parent;
     private String title;

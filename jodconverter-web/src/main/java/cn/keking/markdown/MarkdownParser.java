@@ -3,12 +3,19 @@ package cn.keking.markdown;
 import cn.keking.markdown.mark.MarkContext;
 import cn.keking.markdown.parser.MarkParser;
 import cn.keking.markdown.parser.impl.MarkdownParserComposite;
+import cn.keking.web.controller.FileListController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
 public class MarkdownParser {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MarkdownParser.class);
 
-    private static final String prefix =
+    private MarkdownParser(){
+        throw new IllegalStateException("Utility class");
+    };
+    private static final String PREFIX =
             "<!doctype html>\n" +
                      "<html>\n" +
                     "\t<head>\n" +
@@ -29,7 +36,7 @@ public class MarkdownParser {
                     "\t\t<body>\n" +
                     "\t\t\t<article class=\"markdown-body\">\n";
 
-    private static final String suffix =
+    private static final String SUFFIX =
             "\t\t\t</article>\n" +
                     "\t\t</body>\n" +
                     "</html>\n";
@@ -39,43 +46,69 @@ public class MarkdownParser {
         MarkParser markParser = MarkdownParserComposite.getInstance();
         markParser.parse(markContext);
         StringBuilder sbuf = new StringBuilder();
-        sbuf.append(prefix);
+        sbuf.append(PREFIX);
         sbuf.append(markContext.getHtml());
-        sbuf.append(suffix);
+        sbuf.append(SUFFIX);
         return sbuf.toString();
     }
 
     public static boolean parse(File mdFile, File tarFile) throws FileNotFoundException {
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
         try {
             StringBuilder sbuf = new StringBuilder();
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(mdFile));
-            String s = null;
+            bufferedReader = new BufferedReader(new FileReader(mdFile));
+            String s;
             while ((s = bufferedReader.readLine()) != null) {
                 sbuf.append(s + "\n");
             }
             bufferedReader.close();
             String res = parse(sbuf.toString());
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tarFile));
+            bufferedWriter = new BufferedWriter(new FileWriter(tarFile));
             bufferedWriter.write(res);
             bufferedWriter.close();
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("this file is not found.");
         } catch (IOException e) {
             return false;
+        }finally {
+            if(bufferedReader!=null){
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    LOGGER.error("IOException:",e);
+                }
+            }
+            if(bufferedWriter!=null){
+                try {
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    LOGGER.error("IOException:",e);
+                }
+            }
         }
         return true;
     }
 
     public static boolean parse(String md, File tarFile) throws FileNotFoundException {
+        BufferedWriter bufferedWriter = null;
         try {
             String res = parse(md);
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tarFile));
+            bufferedWriter = new BufferedWriter(new FileWriter(tarFile));
             bufferedWriter.write(res);
             bufferedWriter.close();
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("this file is not found.");
         } catch (IOException e) {
             return false;
+        } finally {
+            if(bufferedWriter!=null){
+                try {
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    LOGGER.error("IOException:",e);
+                }
+            }
         }
         return true;
     }

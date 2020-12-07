@@ -45,7 +45,7 @@ public class TableParser extends AbstractWithEndTagParser {
             }
         }
 
-        List<String[]> tdList = new ArrayList<String[]>(32);
+        List<String[]> tdList = new ArrayList<>(32);
         tdList.add(tdArray);
         pointer += tdLine.length();
         do {

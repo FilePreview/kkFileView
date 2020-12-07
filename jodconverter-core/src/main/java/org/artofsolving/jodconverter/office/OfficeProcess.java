@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -98,7 +99,7 @@ class OfficeProcess {
         return new File(workDir, dirName);
     }
 
-    private void prepareInstanceProfileDir() throws OfficeException {
+    private void prepareInstanceProfileDir()  {
         if (instanceProfileDir.exists()) {
             logger.warning(String.format("profile dir '%s' already exists; deleting", instanceProfileDir));
             deleteProfileDir();
@@ -166,7 +167,7 @@ class OfficeProcess {
         
         private int exitCode;
         
-        protected void attempt() throws TemporaryException, Exception {
+        protected void attempt() throws Exception {
             try {
                 exitCode = process.exitValue();
             } catch (IllegalThreadStateException illegalThreadStateException) {

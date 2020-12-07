@@ -9,30 +9,22 @@ import cn.keking.model.ReturnResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- *
- * @author yudian-it
- * @date 2017/12/1
- */
-/**
  * Author：houzheng
  * Date：11-18
  * 文件控制器
  * 执行对文件的基本操作：上传，删除，下载，搜索是否存在目标文件
  * 所有的操作都是对src/main/file/demo目录下操作
- *
  */
 
 @RestController
@@ -42,23 +34,17 @@ public class FileController {
 
     private final String fileDir = ConfigConstants.getFileDir();
 
-    private final String demoDir = "demo";
+    private static final String DEMO_DIR = "demo";
 
-    private final String demoPath = demoDir + File.separator;
+    private static final String DEMO_PATH = DEMO_DIR + File.separator;
 
     /**
      * author:Qin Huihuang date:2020-11-26
-     *
+     * <p>
      * 由于后台没有服务器，因此上传文件只是简单地把本地某个目录下的文件复制到
      * jodconverter-web/src/main/file/demo目录下
      */
-    @RequestMapping(value = "fileUpload", method = RequestMethod.POST)
-    /**
-     * Author：houzheng
-     * Date：11-18
-     * 文档上传
-     *
-     */
+    @PostMapping(value = "fileUpload")
     public String fileUpload(@RequestParam("file") MultipartFile file) throws JsonProcessingException {
         // 获取文件名
         String fileName = file.getOriginalFilename();
@@ -69,23 +55,23 @@ public class FileController {
         int winSep = fileName.lastIndexOf('\\');
         // Cut off at latest possible point
         int pos = (Math.max(winSep, unixSep));
-        if (pos != -1)  {
+        if (pos != -1) {
             fileName = fileName.substring(pos + 1);
         }
         // 判断是否存在同名文件
         if (existsFile(fileName)) {
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "存在同名文件，请先删除原有文件再次上传", null));
         }
-        File outFile = new File(fileDir + demoPath);
+        File outFile = new File(fileDir + DEMO_PATH);
         if (!outFile.exists()) {
             outFile.mkdirs();
         }
-        logger.info("上传文件：{}", fileDir + demoPath + fileName);
-        try(InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(fileDir + demoPath + fileName)) {
+        logger.info("上传文件：{}", fileDir + DEMO_PATH + fileName);
+        try (InputStream in = file.getInputStream(); OutputStream out = new FileOutputStream(fileDir + DEMO_PATH + fileName)) {
             StreamUtils.copy(in, out);
             /*
              * author : Qin Huihaung date:2020-11-26
-             * 以字符串的形式返回Json串{"code":0,"msg":"SUCCESS","content":null}
+             * 以字符串的形式返回Json串
              */
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
         } catch (IOException e) {
@@ -94,37 +80,41 @@ public class FileController {
         }
     }
 
-    @RequestMapping(value = "deleteFile", method = RequestMethod.GET)
+
     /**
      * Author：houzheng
      * Date：11-18
      * 删除文件
-     *
      */
+    @GetMapping(value = "deleteFile")
     public String deleteFile(String fileName) throws JsonProcessingException {
         if (fileName.contains("/")) {
             fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
         }
-        File file = new File(fileDir + demoPath + fileName);
+        File file = new File(fileDir + DEMO_PATH + fileName);
         logger.info("删除文件：{}", file.getAbsolutePath());
-        if (file.exists()) {
-            file.delete();
+        try {
+            if (file.exists()) {
+                Files.delete(file.toPath());
+            }
+        } catch (IOException e) {
+            logger.error("删除文件失败", e);
         }
         return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
     }
 
-    @RequestMapping(value = "listFiles", method = RequestMethod.GET)
+
     /**
      * Author：houzheng
      * Date：11-18
      * 获取文件
-     *
      */
+    @GetMapping(value = "listFiles")
     public String getFiles() throws JsonProcessingException {
         List<Map<String, String>> list = Lists.newArrayList();
-        File file = new File(fileDir + demoPath);
+        File file = new File(fileDir + DEMO_PATH);
         if (file.exists()) {
-            Arrays.stream(Objects.requireNonNull(file.listFiles())).forEach(file1 -> list.add(ImmutableMap.of("fileName", demoDir + "/" + file1.getName())));
+            Arrays.stream(Objects.requireNonNull(file.listFiles())).forEach(file1 -> list.add(ImmutableMap.of("fileName", DEMO_DIR + "/" + file1.getName())));
         }
         /*
          * author : Qin Huihuang date:2020-11-26
@@ -132,14 +122,14 @@ public class FileController {
          */
         return new ObjectMapper().writeValueAsString(list);
     }
+
     /**
      * Author：houzheng
      * Date：11-18
      * 是否存在文件
-     *
      */
     private boolean existsFile(String fileName) {
-        File file = new File(fileDir + demoPath + fileName);
+        File file = new File(fileDir + DEMO_PATH + fileName);
         return file.exists();
     }
 }

@@ -1,6 +1,9 @@
 package cn.keking.markdown.constant.magic;
 
 public class SYMBOL {
+    private SYMBOL(){
+        throw new IllegalStateException("Utility class");
+    }
     /**
      * EMPTY
      */

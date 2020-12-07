@@ -29,17 +29,17 @@ public class CacheServiceRedisImpl implements CacheService {
 
     @Override
     public void initPDFCachePool(Integer capacity) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void initIMGCachePool(Integer capacity) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void initPdfImagesCachePool(Integer capacity) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override

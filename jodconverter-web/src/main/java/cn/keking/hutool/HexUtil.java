@@ -1,5 +1,7 @@
 package cn.keking.hutool;
 
+import org.apache.pdfbox.util.Hex;
+
 import java.awt.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +16,9 @@ import java.nio.charset.StandardCharsets;
  * @author Looly
  */
 public class HexUtil {
+	private HexUtil(){
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * 用于建立十六进制字符的输出的小写字符数组
@@ -177,7 +182,8 @@ public class HexUtil {
 		byte[] out = new byte[len >> 1];
 
 		// two characters form the hex value.
-		for (int i = 0, j = 0; j < len; i++) {
+		int j = 0;
+		for (int i = 0; j < len; i++) {
 			int f = toDigit(hexData[j], j) << 4;
 			j++;
 			f = f | toDigit(hexData[j], j);
@@ -362,7 +368,8 @@ public class HexUtil {
 		final int len = data.length;
 		final char[] out = new char[len << 1];//len*2
 		// two characters from the hex value.
-		for (int i = 0, j = 0; i < len; i++) {
+		int j = 0;
+		for (int i = 0; i < len; i++) {
 			out[j++] = toDigits[(0xF0 & data[i]) >>> 4];// 高位
 			out[j++] = toDigits[0x0F & data[i]];// 低位
 		}

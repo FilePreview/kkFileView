@@ -25,8 +25,5 @@ class TemporaryException extends Exception {
     public TemporaryException(Throwable cause) {
         super(cause);
     }
-
-    public static void main(String[] args) {
-        System.out.println(new BigDecimal("7412611111110.99"));
-    }
+    
 }

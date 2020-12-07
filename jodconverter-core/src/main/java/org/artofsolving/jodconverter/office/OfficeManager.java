@@ -29,21 +29,21 @@ public interface OfficeManager {
      * @param task
      * @throws OfficeException
      */
-    void execute(OfficeTask task) throws OfficeException;
+    void execute(OfficeTask task) throws InterruptedException;
 
     /**
      * @author 庞新程
      * 启动
      * @throws OfficeException
      */
-    void start() throws OfficeException;
+    void start() throws InterruptedException;
 
     /**
      * @author 庞新程
      * 停止
      * @throws OfficeException
      */
-    void stop() throws OfficeException;
+    void stop() ;
 
     /**
      * @author 庞新程

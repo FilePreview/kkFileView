@@ -23,7 +23,7 @@ import java.util.UUID;
 @Component
 public class DownloadUtils {
 
-    private final Logger logger = LoggerFactory.getLogger(DownloadUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadUtils.class);
 
     private final String fileDir = ConfigConstants.getFileDir();
 
@@ -47,6 +47,15 @@ public class DownloadUtils {
         String type = fileAttribute.getSuffix();
         ReturnResponse<String> response = new ReturnResponse<>(0, "下载成功!!!", "");
         /*
+         * modified by Qin Huihuang, 如果是本地文件的话，不需要下载处理，直接进行转码
+         * 因此直接将content设置为文件的绝对路径即可
+         */
+        if(urlStr.startsWith("D:/")||urlStr.startsWith("C:/")||urlStr.startsWith("E:/")){
+            response.setContent(urlStr);
+            response.setMsg(fileAttribute.getName());
+            return response;
+        }
+        /*
          * Author FanPan Date 2020-11-22
          * UUID为通用唯一标识码
          */
@@ -67,7 +76,7 @@ public class DownloadUtils {
                 byte[] bytes = getBytesFromUrl(urlStr);
                 OutputStream os = new FileOutputStream(new File(realPath));
                 saveBytesToOutStream(bytes, os);
-            } else if (url.getProtocol() != null && "ftp".equals(url.getProtocol().toLowerCase())) {
+            } else if (url.getProtocol() != null && "ftp".equalsIgnoreCase(url.getProtocol())) {
                 String ftpUsername = fileUtils.getUrlParameterReg(fileAttribute.getUrl(), URL_PARAM_FTP_USERNAME);
                 String ftpPassword = fileUtils.getUrlParameterReg(fileAttribute.getUrl(), URL_PARAM_FTP_PASSWORD);
                 String ftpControlEncoding = fileUtils.getUrlParameterReg(fileAttribute.getUrl(), URL_PARAM_FTP_CONTROL_ENCODING);
@@ -79,12 +88,12 @@ public class DownloadUtils {
             }
             response.setContent(realPath);
             response.setMsg(fileName);
-            if(FileType.simText.equals(fileAttribute.getType())){
+            if(FileType.SIM_TEXT.equals(fileAttribute.getType())){
                 convertTextPlainFileCharsetToUtf8(realPath);
             }
             return response;
         } catch (IOException e) {
-            logger.error("文件下载失败，url：{}", urlStr, e);
+            LOGGER.error("文件下载失败，url：{}", urlStr, e);
             response.setCode(1);
             response.setContent(null);
             if (e instanceof FileNotFoundException) {
@@ -97,9 +106,8 @@ public class DownloadUtils {
     }
 
     /**
-     * @Author FanPan
-     * @Date 2020-11-22
-     * @param urlStr
+     * @author FanPan
+     * @date 2020-11-22
      * @return 从url中读取的字节
      * @throws IOException
      */
@@ -108,10 +116,10 @@ public class DownloadUtils {
         if (is != null) {
             return getBytesFromStream(is);
         } else {
-            urlStr = URLUtil.normalize(urlStr, true, true);
+            urlStr = URLUtil.normalize(urlStr, true);
             is = getInputStreamFromUrl(urlStr);
             if (is == null) {
-                logger.error("文件下载异常：url：{}", urlStr);
+                LOGGER.error("文件下载异常：url：{}", urlStr);
                 throw new IOException("文件下载异常：url：" + urlStr);
             }
             return getBytesFromStream(is);
@@ -145,7 +153,7 @@ public class DownloadUtils {
             }
             return connection.getInputStream();
         } catch (IOException e) {
-            logger.warn("连接url异常：url：{}", urlStr);
+            LOGGER.warn("连接url异常：url：{}", urlStr);
             return null;
         }
     }
@@ -175,19 +183,13 @@ public class DownloadUtils {
    * 探测源文件编码,探测到编码切不为utf8则进行转码
    * @param filePath 文件路径
    */
-  private static void convertTextPlainFileCharsetToUtf8(String filePath) throws IOException {
+  private static void convertTextPlainFileCharsetToUtf8(String filePath)  {
     File sourceFile = new File(filePath);
     if(sourceFile.exists() && sourceFile.isFile() && sourceFile.canRead()) {
       String encoding = null;
-      try {
-        FileCharsetDetector.Observer observer = FileCharsetDetector.guessFileEncoding(sourceFile);
-        // 为准确探测到编码,不适用猜测的编码
-        encoding = observer.isFound()?observer.getEncoding():null;
-        // 为准确探测到编码,可以考虑使用GBK  大部分文件都是windows系统产生的
-      } catch (IOException e) {
-        // 编码探测失败,
-        e.printStackTrace();
-      }
+      FileCharsetDetector.Observer observer = FileCharsetDetector.guessFileEncoding(sourceFile);
+      encoding = observer.isFound()?observer.getEncoding():null;
+      //为准确探测到编码,可以考虑使用GBK  大部分文件都是windows系统产生的
       if(encoding != null && !"UTF-8".equals(encoding)){
         // 不为utf8,进行转码
         File tmpUtf8File = new File(filePath+".utf8");
@@ -201,12 +203,16 @@ public class DownloadUtils {
                 writer.write(buf, 0, read);
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.info("Exception ",e);
         }
         // 删除源文件
-        sourceFile.delete();
+        if(!sourceFile.delete()){
+            LOGGER.info("删除源文件失败");
+        }
         // 重命名
-        tmpUtf8File.renameTo(sourceFile);
+        if(!tmpUtf8File.renameTo(sourceFile)){
+            LOGGER.info("重命名文件失败");
+        }
       }
     }
   }

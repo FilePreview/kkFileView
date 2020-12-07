@@ -8,6 +8,9 @@ import cn.keking.markdown.constant.magic.SYMBOL;
  * @author harry
  */
 public class StringUtility {
+    private StringUtility(){
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String getDigit(String str, int start) {
         char c;

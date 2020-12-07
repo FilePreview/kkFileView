@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
     /**
      * Author：houzheng
      * Date：11-18

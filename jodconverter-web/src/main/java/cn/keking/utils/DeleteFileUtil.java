@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
 /**
  * 删除文件工具类
@@ -11,6 +13,9 @@ import java.util.Objects;
  * @Date 2020-11-17
  */
 public class DeleteFileUtil {
+    private DeleteFileUtil(){
+        throw new IllegalStateException("Utility class");
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteFileUtil.class);
 
@@ -25,15 +30,16 @@ public class DeleteFileUtil {
         File file = new File(fileName);
         // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if (file.exists() && file.isFile()) {
-            if (file.delete()) {
-                LOGGER.info("删除单个文件" + fileName + "成功！");
+            try{
+                Files.delete(file.toPath());
+                LOGGER.info("删除单个文件[{}][{}]",fileName ,"成功！");
                 return true;
-            } else {
-                LOGGER.info("删除单个文件" + fileName + "失败！");
+            }catch (IOException e){
+                LOGGER.info("删除单个文件[{}][{}]",fileName ,"失败！");
                 return false;
             }
         } else {
-            LOGGER.info("删除单个文件失败：" + fileName + "不存在！");
+            LOGGER.info("删除单个文件失败[{}][{}]：",fileName,"不存在！");
             return false;
         }
     }
@@ -54,7 +60,7 @@ public class DeleteFileUtil {
         File dirFile = new File(dir);
         // 如果dir对应的文件不存在，或者不是一个目录，则退出
         if ((!dirFile.exists()) || (!dirFile.isDirectory())) {
-            LOGGER.info("删除目录失败：" + dir + "不存在！");
+            LOGGER.info("删除目录失败：[{}][{}]",dir,"不存在！");
             return false;
         }
         boolean flag = true;
@@ -79,8 +85,7 @@ public class DeleteFileUtil {
                 }
             }
         }
-        dirFile.delete();
-        if (!flag) {
+        if (!dirFile.delete()||!flag) {
             LOGGER.info("删除目录失败！");
             return false;
         }

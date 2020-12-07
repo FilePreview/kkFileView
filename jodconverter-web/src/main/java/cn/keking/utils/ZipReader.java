@@ -14,6 +14,8 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -27,12 +29,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * @author yudian-it
  * @date 2017/11/27
  */
 @Component
 public class ZipReader {
+    public static final String IO_EXCEPTION = "IOException";
+    public static final String DELETE_FILE_FAILURE = "删除原先存在文件失败";
     static Pattern pattern = Pattern.compile("^\\d+");
 
     private final FileUtils fileUtils;
@@ -41,25 +44,26 @@ public class ZipReader {
 
     private final ExecutorService executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZipReader.class);
+
     public ZipReader(FileUtils fileUtils) {
         this.fileUtils = fileUtils;
     }
 
     /**
      * 读取zip文件
-     * @Author FanPan
-     * @Date 2020-11-22
+     *
      * @param filePath zip文件路径
-     * @param fileKey
-     * @return
+     * @author FanPan
+     * @date 2020-11-22
      */
-    public String readZipFile(String filePath,String fileKey) {
+    public String readZipFile(String filePath, String fileKey) {
         String archiveSeparator = "/";
         Map<String, FileNode> appender = Maps.newHashMap();
         List<String> imgUrls = Lists.newArrayList();
-        String baseUrl = BaseUrlFilter.getBaseUrl();
+        String baseUrl = BaseUrlFilter.getBaseURL();
         String archiveFileName = fileUtils.getFileNameFromPath(filePath);
-        try (ZipFile zipFile = new ZipFile(filePath, fileUtils.getFileEncodeUTFGBK(filePath))){
+        try (ZipFile zipFile = new ZipFile(filePath, fileUtils.getFileEncodeUTFGBK(filePath))) {
             /*
              *Author:FanPan Date:2020-11-22
              *一个zipEntry就是一个子目录或一个zip文件
@@ -69,7 +73,7 @@ public class ZipReader {
             // 排序
             entries = sortZipEntries(entries);
             List<Map<String, ZipArchiveEntry>> entriesToBeExtracted = Lists.newArrayList();
-            while (entries.hasMoreElements()){
+            while (entries.hasMoreElements()) {
                 ZipArchiveEntry entry = entries.nextElement();
                 /*
                  *Author:FanPan Date:2020-11-22
@@ -86,10 +90,10 @@ public class ZipReader {
                     entriesToBeExtracted.add(Collections.singletonMap(childName, entry));
                 }
                 String parentName = getLast2FileName(fullName, archiveSeparator, archiveFileName);
-                parentName = (level-1) + "_" + parentName;
-                FileType type=fileUtils.typeFromUrl(childName);
-                if (type.equals(FileType.picture)){//添加图片文件到图片列表
-                    imgUrls.add(baseUrl+childName);
+                parentName = (level - 1) + "_" + parentName;
+                FileType type = fileUtils.typeFromUrl(childName);
+                if (type.equals(FileType.PICTURE)) {//添加图片文件到图片列表
+                    imgUrls.add(baseUrl + childName);
                 }
                 FileNode node = new FileNode(originName, childName, parentName, new ArrayList<>(), directory, fileKey);
                 addNodes(appender, parentName, node);
@@ -97,24 +101,23 @@ public class ZipReader {
             }
             // 开启新的线程处理文件解压
             executors.submit(new ZipExtractorWorker(entriesToBeExtracted, zipFile, filePath));
-            fileUtils.putImgCache(fileKey,imgUrls);
+            fileUtils.putImgCache(fileKey, imgUrls);
             return new ObjectMapper().writeValueAsString(appender.get(""));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(IO_EXCEPTION, e);
             return null;
         }
     }
 
     /**
      * 按照文件名长度对zip文件的子文件排序
-     * @Author FanPan
-     * @Date 2020-11-22
-     * @param entries
-     * @return
+     *
+     * @author FanPan
+     * @date 2020-11-22
      */
     private Enumeration<ZipArchiveEntry> sortZipEntries(Enumeration<ZipArchiveEntry> entries) {
         List<ZipArchiveEntry> sortedEntries = Lists.newArrayList();
-        while(entries.hasMoreElements()){
+        while (entries.hasMoreElements()) {
             sortedEntries.add(entries.nextElement());
         }
         sortedEntries.sort(Comparator.comparingInt(o -> o.getName().length()));
@@ -123,17 +126,17 @@ public class ZipReader {
 
     /**
      * 读取rar文件
+     *
+     * @param filePath zip文件路径
+     * @return
      * @Author FanPan
      * @Date 2020-11-22
-     * @param filePath zip文件路径
-     * @param fileKey
-     * @return
      */
-    public String unRar(String filePath,String fileKey){
+    public String unRar(String filePath, String fileKey) {
         Map<String, FileNode> appender = Maps.newHashMap();
         List<String> imgUrls = Lists.newArrayList();
-        String baseUrl = BaseUrlFilter.getBaseUrl();
-        try (Archive archive = new Archive(new FileInputStream(new File(filePath)))){
+        String baseUrl = BaseUrlFilter.getBaseURL();
+        try (Archive archive = new Archive(new FileInputStream(new File(filePath)))) {
 
             List<FileHeader> headers = archive.getFileHeaders();
             headers = sortedHeaders(headers);
@@ -143,7 +146,7 @@ public class ZipReader {
                 String fullName;
                 if (header.isUnicode()) {
                     fullName = header.getFileNameW();
-                }else {
+                } else {
                     fullName = header.getFileNameString();
                 }
                 // 展示名
@@ -156,43 +159,44 @@ public class ZipReader {
                 }
                 String parentName = getLast2FileName(fullName, "\\", archiveFileName);
                 FileType type = fileUtils.typeFromUrl(childName);
-                if (type.equals(FileType.picture)){//添加图片文件到图片列表
-                    imgUrls.add(baseUrl+childName);
+                if (type.equals(FileType.PICTURE)) {//添加图片文件到图片列表
+                    imgUrls.add(baseUrl + childName);
                 }
                 FileNode node = new FileNode(originName, childName, parentName, new ArrayList<>(), directory, fileKey);
                 addNodes(appender, parentName, node);
                 appender.put(childName, node);
             }
             executors.submit(new RarExtractorWorker(headersToBeExtracted, archive, filePath));
-            fileUtils.putImgCache(fileKey,imgUrls);
+            fileUtils.putImgCache(fileKey, imgUrls);
             return new ObjectMapper().writeValueAsString(appender.get(""));
         } catch (RarException | IOException e) {
-            e.printStackTrace();
+            LOGGER.info("RarException | IOException", e);
         }
         return null;
     }
 
     /**
      * 读取7Z文件
-     * @Author FanPan
-     * @Date 2020-11-22
+     *
      * @param filePath zip文件路径
      * @param fileKey
      * @return
+     * @Author FanPan
+     * @Date 2020-11-22
      */
-    public String read7zFile(String filePath,String fileKey) {
+    public String read7zFile(String filePath, String fileKey) {
         String archiveSeparator = "/";
         Map<String, FileNode> appender = Maps.newHashMap();
         List<String> imgUrls = Lists.newArrayList();
-        String baseUrl= BaseUrlFilter.getBaseUrl();
+        String baseUrl = BaseUrlFilter.getBaseURL();
         String archiveFileName = fileUtils.getFileNameFromPath(filePath);
-        try(SevenZFile zipFile = new SevenZFile(new File(filePath))) {
+        try (SevenZFile zipFile = new SevenZFile(new File(filePath))) {
 
             Iterable<SevenZArchiveEntry> entries = zipFile.getEntries();
             // 排序
             Enumeration<SevenZArchiveEntry> newEntries = sortSevenZEntries(entries);
             List<Map<String, SevenZArchiveEntry>> entriesToBeExtracted = Lists.newArrayList();
-            while (newEntries.hasMoreElements()){
+            while (newEntries.hasMoreElements()) {
                 SevenZArchiveEntry entry = newEntries.nextElement();
                 String fullName = entry.getName();
                 int level = fullName.split(archiveSeparator).length;
@@ -205,10 +209,10 @@ public class ZipReader {
                     entriesToBeExtracted.add(Collections.singletonMap(childName, entry));
                 }
                 String parentName = getLast2FileName(fullName, archiveSeparator, archiveFileName);
-                parentName = (level-1) + "_" + parentName;
-                FileType type=fileUtils.typeFromUrl(childName);
-                if (type.equals(FileType.picture)){//添加图片文件到图片列表
-                    imgUrls.add(baseUrl+childName);
+                parentName = (level - 1) + "_" + parentName;
+                FileType type = fileUtils.typeFromUrl(childName);
+                if (type.equals(FileType.PICTURE)) {//添加图片文件到图片列表
+                    imgUrls.add(baseUrl + childName);
                 }
                 FileNode node = new FileNode(originName, childName, parentName, new ArrayList<>(), directory, fileKey);
                 addNodes(appender, parentName, node);
@@ -216,10 +220,10 @@ public class ZipReader {
             }
             // 开启新的线程处理文件解压
             executors.submit(new SevenZExtractorWorker(entriesToBeExtracted, filePath));
-            fileUtils.putImgCache(fileKey,imgUrls);
+            fileUtils.putImgCache(fileKey, imgUrls);
             return new ObjectMapper().writeValueAsString(appender.get(""));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info(IO_EXCEPTION, e);
             return null;
         }
     }
@@ -235,11 +239,12 @@ public class ZipReader {
 
     /**
      * 向appender中增加子文件节点
-     * @Author FanPan
-     * @Date 2020-11-22
+     *
      * @param appender
      * @param parentName
      * @param node
+     * @Author FanPan
+     * @Date 2020-11-22
      */
     private void addNodes(Map<String, FileNode> appender, String parentName, FileNode node) {
         if (appender.containsKey(parentName)) {
@@ -257,10 +262,10 @@ public class ZipReader {
     private List<FileHeader> sortedHeaders(List<FileHeader> headers) {
         List<FileHeader> sortedHeaders = new ArrayList<>();
         Map<Integer, FileHeader> mapHeaders = new TreeMap<>();
-        headers.forEach(header -> mapHeaders.put(new Integer(0).equals(header.getFileNameW().length()) ? header.getFileNameString().length() : header.getFileNameW().length(), header));
-        for (Map.Entry<Integer, FileHeader> entry : mapHeaders.entrySet()){
+        headers.forEach(header -> mapHeaders.put(Integer.valueOf(0).equals(header.getFileNameW().length()) ? header.getFileNameString().length() : header.getFileNameW().length(), header));
+        for (Map.Entry<Integer, FileHeader> entry : mapHeaders.entrySet()) {
             for (FileHeader header : headers) {
-                if (entry.getKey().equals(new Integer(0).equals(header.getFileNameW().length()) ? header.getFileNameString().length() : header.getFileNameW().length())) {
+                if (entry.getKey().equals(Integer.valueOf(0).equals(header.getFileNameW().length()) ? header.getFileNameString().length() : header.getFileNameW().length())) {
                     sortedHeaders.add(header);
                 }
             }
@@ -270,7 +275,7 @@ public class ZipReader {
 
     private static String getLast2FileName(String fullName, String seperator, String rootName) {
         if (fullName.endsWith(seperator)) {
-            fullName = fullName.substring(0, fullName.length()-1);
+            fullName = fullName.substring(0, fullName.length() - 1);
         }
         // 1.获取剩余部分
         int endIndex = fullName.lastIndexOf(seperator);
@@ -284,15 +289,15 @@ public class ZipReader {
     }
 
     /**
-     * @Author FanPan
-     * @Date 2020-11-22
-     * @param fullName 包含文件路径的文件名
+     * @param fullName  包含文件路径的文件名
      * @param seperator 文件分割符
      * @return 不包含层级的自身文件名
+     * @Author FanPan
+     * @Date 2020-11-22
      */
     private static String getLastFileName(String fullName, String seperator) {
         if (fullName.endsWith(seperator)) {
-            fullName = fullName.substring(0, fullName.length()-1);
+            fullName = fullName.substring(0, fullName.length() - 1);
         }
         String newName = fullName;
         if (fullName.contains(seperator)) {
@@ -301,12 +306,14 @@ public class ZipReader {
         return newName;
     }
 
-    public static Comparator<FileNode> sortComparator = new Comparator<FileNode>() {
+    public static final Comparator<FileNode> sortComparator = new Comparator<FileNode>() {
         final Collator cmp = Collator.getInstance(Locale.US);
+
         @Override
         public int compare(FileNode o1, FileNode o2) {
             // 判断两个对比对象是否是开头包含数字，如果包含数字则获取数字并按数字真正大小进行排序
-            BigDecimal num1,num2;
+            BigDecimal num1;
+            BigDecimal num2;
             if (null != (num1 = isStartNumber(o1))
                     && null != (num2 = isStartNumber(o2))) {
                 return num1.subtract(num2).intValue();
@@ -347,14 +354,16 @@ public class ZipReader {
             this.childList = childList;
             this.directory = directory;
         }
-        public FileNode(String originName, String fileName, String parentFileName, List<FileNode> childList, boolean directory,String fileKey) {
+
+        public FileNode(String originName, String fileName, String parentFileName, List<FileNode> childList, boolean directory, String fileKey) {
             this.originName = originName;
             this.fileName = fileName;
             this.parentFileName = parentFileName;
             this.childList = childList;
             this.directory = directory;
-            this.fileKey=fileKey;
+            this.fileKey = fileKey;
         }
+
         public String getFileKey() {
             return fileKey;
         }
@@ -392,7 +401,7 @@ public class ZipReader {
             try {
                 return new ObjectMapper().writeValueAsString(this);
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                LOGGER.info("JsonProcessingException", e);
                 return "";
             }
         }
@@ -444,37 +453,37 @@ public class ZipReader {
                 try {
                     extractZipFile(childName, zipFile.getInputStream(entry));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.info(IO_EXCEPTION, e);
                 }
             }
             try {
                 zipFile.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(IO_EXCEPTION, e);
             }
-            if (new File(filePath).exists()) {
-                new File(filePath).delete();
+            if (new File(filePath).exists() && !new File(filePath).delete()) {
+                LOGGER.info(DELETE_FILE_FAILURE);
+
             }
         }
 
         /**
+         * @param childName zip文件中的子文件名
+         * @param zipFile   zip文件的子文件的输入流
+         *                  解压缩单个子文件，存在本地file文件夹下。
          * @Author FanPan
          * @Date 2020-11-22
-         * @param childName zip文件中的子文件名
-         * @param zipFile zip文件的子文件的输入流
-         * 解压缩单个子文件，存在本地file文件夹下。
-         *
          */
         private void extractZipFile(String childName, InputStream zipFile) {
             String outPath = fileDir + childName;
-            try (OutputStream ot = new FileOutputStream(outPath)){
+            try (OutputStream ot = new FileOutputStream(outPath)) {
                 byte[] inByte = new byte[1024];
                 int len;
-                while ((-1 != (len = zipFile.read(inByte)))){
+                while ((-1 != (len = zipFile.read(inByte)))) {
                     ot.write(inByte, 0, len);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(IO_EXCEPTION, e);
             }
         }
     }
@@ -501,7 +510,7 @@ public class ZipReader {
          */
         @Override
         public void run() {
-            try (SevenZFile sevenZFile = new SevenZFile(new File(filePath));){
+            try (SevenZFile sevenZFile = new SevenZFile(new File(filePath))) {
 
                 SevenZArchiveEntry entry = sevenZFile.getNextEntry();
                 while (entry != null) {
@@ -518,24 +527,22 @@ public class ZipReader {
                             break;
                         }
                     }
-                    try(FileOutputStream out = new FileOutputStream(fileDir + childName)) {
+                    try (FileOutputStream out = new FileOutputStream(fileDir + childName)) {
 
                         byte[] content = new byte[(int) entry.getSize()];
                         sevenZFile.read(content, 0, content.length);
                         out.write(content);
-                        out.close();
                         entry = sevenZFile.getNextEntry();
-                    }catch(Exception e){
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        LOGGER.info(IO_EXCEPTION, e);
                     }
                 }
-                sevenZFile.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(IO_EXCEPTION, e);
             }
 
-            if (new File(filePath).exists()) {
-                new File(filePath).delete();
+            if (new File(filePath).exists() && !new File(filePath).delete()) {
+                LOGGER.info(DELETE_FILE_FAILURE);
             }
         }
     }
@@ -560,8 +567,8 @@ public class ZipReader {
         }
 
         /**
-         * @Author FanPan
-         * @Date 2020-11-22
+         * @author FanPan
+         * @date 2020-11-22
          * 将map里的rar文件解压缩
          */
         @Override
@@ -573,25 +580,25 @@ public class ZipReader {
             try {
                 archive.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.info(IO_EXCEPTION, e);
             }
-            if (new File(filePath).exists()) {
-                new File(filePath).delete();
+            if (new File(filePath).exists() && !new File(filePath).delete()) {
+                LOGGER.info(DELETE_FILE_FAILURE);
             }
         }
+
         /**
-         * @Author FanPan
-         * @Date 2020-11-22
          * @param childName rar文件中的子文件名
-         * 解压缩单个rar子文件，存在本地file文件夹下。
-         *
+         *                  解压缩单个rar子文件，存在本地file文件夹下。
+         * @author FanPan
+         * @date 2020-11-22
          */
         private void extractRarFile(String childName, FileHeader header, Archive archive) {
             String outPath = fileDir + childName;
-            try(OutputStream ot = new FileOutputStream(outPath)) {
+            try (OutputStream ot = new FileOutputStream(outPath)) {
                 archive.extractFile(header, ot);
             } catch (IOException | RarException e) {
-                e.printStackTrace();
+                LOGGER.info("IOException | RarException", e);
             }
         }
     }

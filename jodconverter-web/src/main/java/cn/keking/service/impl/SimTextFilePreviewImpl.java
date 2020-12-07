@@ -1,5 +1,6 @@
 package cn.keking.service.impl;
 
+import cn.keking.config.ConfigConstants;
 import cn.keking.markdown.MarkdownParser;
 import cn.keking.model.FileAttribute;
 import cn.keking.model.ReturnResponse;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
  */
 @Service
 public class SimTextFilePreviewImpl implements FilePreview {
+    private static final String FILE_DIR = ConfigConstants.getFileDir();
 
     private final DownloadUtils downloadUtils;
 
@@ -28,9 +30,6 @@ public class SimTextFilePreviewImpl implements FilePreview {
     @Override
     public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute){
         String fileName = fileAttribute.getName();
-        /*
-         * 模拟的下载过程太鸡肋了
-         */
         ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, fileName);
         if (0 != response.getCode()) {
             model.addAttribute("msg", response.getMsg());
@@ -39,34 +38,29 @@ public class SimTextFilePreviewImpl implements FilePreview {
         }
         try {
             File originFile = new File(response.getContent());
-            int index = response.getContent().lastIndexOf(".");
-            String name = response.getContent().substring(0,index+1);
-            File previewFile = new File(name + "html");
-            MarkdownParser.parse(originFile,previewFile);
-
+            int index = fileName.lastIndexOf(".");
+            String name = fileName.substring(0,index+1);
+            String suffix = fileName.substring(index+1);
+            if(suffix.equals("md")){
+                File previewFile = new File(FILE_DIR+name + "html");
+                MarkdownParser.parse(originFile,previewFile);
+                index = response.getMsg().lastIndexOf(".");
+                name = response.getMsg().substring(0,index+1);
+                model.addAttribute("ordinaryUrl",name+"html");
+            }else{
+                File previewFile = new File(FILE_DIR + name + "txt");
+                if(previewFile.exists() ){
+                    Files.delete(previewFile.toPath());
+                }
+                Files.copy(originFile.toPath(), previewFile.toPath());
+                model.addAttribute("ordinaryUrl", response.getMsg());
+            }
         } catch (IOException e) {
             model.addAttribute("msg", e.getLocalizedMessage());
             model.addAttribute("fileType",fileAttribute.getSuffix());
             return "fileNotSupported";
         }
-        model.addAttribute("ordinaryUrl", response.getMsg());
-        System.out.println(response.getMsg());
-        printCallStatck();
         return "txt";
-    }
-
-    public static void printCallStatck() {
-        Throwable ex = new Throwable();
-        StackTraceElement[] stackElements = ex.getStackTrace();
-        if (stackElements != null) {
-            for (int i = 0; i < stackElements.length; i++) {
-                System.out.print(stackElements[i].getClassName()+"/t");
-                System.out.print(stackElements[i].getFileName()+"/t");
-                System.out.print(stackElements[i].getLineNumber()+"/t");
-                System.out.println(stackElements[i].getMethodName());
-                System.out.println("-----------------------------------");
-            }
-        }
     }
 
 }

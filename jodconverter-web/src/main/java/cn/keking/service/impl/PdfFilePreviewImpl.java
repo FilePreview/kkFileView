@@ -20,6 +20,9 @@ import java.util.List;
 @Service
 public class PdfFilePreviewImpl implements FilePreview {
 
+    public static final String FILE_TYPE = "fileType";
+    public static final String FILE_NOT_SUPPORTED = "fileNotSupported";
+    public static final String PDF_URL = "pdfUrl";
     private final FileUtils fileUtils;
 
     private final PdfUtils pdfUtils;
@@ -41,7 +44,7 @@ public class PdfFilePreviewImpl implements FilePreview {
         String suffix=fileAttribute.getSuffix();
         String fileName=fileAttribute.getName();
         String officePreviewType = model.asMap().get("officePreviewType") == null ? ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
-        String baseUrl = BaseUrlFilter.getBaseUrl();
+        String baseUrl = BaseUrlFilter.getBaseURL();
         String pdfName = fileName.substring(0, fileName.lastIndexOf(".") + 1) + "pdf";
         String outFilePath = FILE_DIR + pdfName;
         if (OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_IMAGE.equals(officePreviewType) || OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_ALL_IMAGES.equals(officePreviewType)) {
@@ -49,9 +52,9 @@ public class PdfFilePreviewImpl implements FilePreview {
             if (!fileUtils.listConvertedFiles().containsKey(pdfName) || !ConfigConstants.isCacheEnabled()) {
                 ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, fileName);
                 if (0 != response.getCode()) {
-                    model.addAttribute("fileType", suffix);
+                    model.addAttribute(FILE_TYPE, suffix);
                     model.addAttribute("msg", response.getMsg());
-                    return "fileNotSupported";
+                    return FILE_NOT_SUPPORTED;
                 }
                 outFilePath = response.getContent();
                 if (ConfigConstants.isCacheEnabled()) {
@@ -60,10 +63,10 @@ public class PdfFilePreviewImpl implements FilePreview {
                 }
             }
             List<String> imageUrls = pdfUtils.pdf2jpg(outFilePath, pdfName, baseUrl);
-            if (imageUrls == null || imageUrls.size() < 1) {
+            if (imageUrls == null || imageUrls.isEmpty()) {
                 model.addAttribute("msg", "pdf转图片异常，请联系管理员");
-                model.addAttribute("fileType",fileAttribute.getSuffix());
-                return "fileNotSupported";
+                model.addAttribute(FILE_TYPE,fileAttribute.getSuffix());
+                return FILE_NOT_SUPPORTED;
             }
             model.addAttribute("imgurls", imageUrls);
             model.addAttribute("currentUrl", imageUrls.get(0));
@@ -78,20 +81,20 @@ public class PdfFilePreviewImpl implements FilePreview {
                 if (!fileUtils.listConvertedFiles().containsKey(pdfName) || !ConfigConstants.isCacheEnabled()) {
                     ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, pdfName);
                     if (0 != response.getCode()) {
-                        model.addAttribute("fileType", suffix);
+                        model.addAttribute(FILE_TYPE, suffix);
                         model.addAttribute("msg", response.getMsg());
-                        return "fileNotSupported";
+                        return FILE_NOT_SUPPORTED;
                     }
-                    model.addAttribute("pdfUrl", fileUtils.getRelativePath(response.getContent()));
+                    model.addAttribute(PDF_URL, fileUtils.getRelativePath(response.getContent()));
                     if (ConfigConstants.isCacheEnabled()) {
                         // 加入缓存
                         fileUtils.addConvertedFile(pdfName, fileUtils.getRelativePath(outFilePath));
                     }
                 } else {
-                    model.addAttribute("pdfUrl", pdfName);
+                    model.addAttribute(PDF_URL, pdfName);
                 }
             } else {
-                model.addAttribute("pdfUrl", url);
+                model.addAttribute(PDF_URL, url);
             }
         }
         return "pdf";

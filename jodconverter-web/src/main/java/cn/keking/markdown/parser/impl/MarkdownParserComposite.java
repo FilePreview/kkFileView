@@ -1,6 +1,6 @@
 package cn.keking.markdown.parser.impl;
 
-import cn.keking.markdown.constant.magic.CHAR_SYMBOL;
+import cn.keking.markdown.constant.magic.CharSymbol;
 import cn.keking.markdown.mark.MARK;
 import cn.keking.markdown.mark.MarkContext;
 import cn.keking.markdown.mark.MarkEntity;
@@ -28,8 +28,8 @@ public class MarkdownParserComposite implements MarkParser {
     @Override
     public void parse(MarkContext markContext) {
         //if first char is not \n then fill
-        if (markContext.getParentMark() == null&&markContext.getContent().charAt(0)!= CHAR_SYMBOL.ENTER) {
-            markContext.setContent(CHAR_SYMBOL.ENTER + markContext.getContent());
+        if (markContext.getParentMark() == null&&markContext.getContent().charAt(0)!= CharSymbol.ENTER) {
+            markContext.setContent(CharSymbol.ENTER + markContext.getContent());
         }
         do {
             //detect start mark

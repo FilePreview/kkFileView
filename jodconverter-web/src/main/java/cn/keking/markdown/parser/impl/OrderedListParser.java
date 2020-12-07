@@ -1,7 +1,7 @@
 package cn.keking.markdown.parser.impl;
 
 import cn.keking.markdown.constant.CONSTANT;
-import cn.keking.markdown.constant.magic.CHAR_SYMBOL;
+import cn.keking.markdown.constant.magic.CharSymbol;
 import cn.keking.markdown.mark.MARK;
 import cn.keking.markdown.mark.MarkContext;
 import cn.keking.markdown.mark.TagListEntity;
@@ -32,15 +32,12 @@ public class OrderedListParser extends AbstractListParser {
         }
         tempPointer += digit.length();
         //the next letter must be .
-        if (content.charAt(tempPointer) != CHAR_SYMBOL.DOT) {
+        if (content.charAt(tempPointer) != CharSymbol.DOT) {
             return false;
         }
         //next letter must by ' '
         tempPointer++;
-        if (content.charAt(tempPointer) != CHAR_SYMBOL.BLANK) {
-            return false;
-        }
-        return true;
+        return content.charAt(tempPointer) == CharSymbol.BLANK;
     }
 
     @Override
@@ -65,14 +62,14 @@ public class OrderedListParser extends AbstractListParser {
 
         int tempPointer=digit.length();
         //the next letter must be .
-        if (tempPointer>=innerLine.length()||innerLine.charAt(tempPointer) != CHAR_SYMBOL.DOT) {
+        if (tempPointer>=innerLine.length()||innerLine.charAt(tempPointer) != CharSymbol.DOT) {
             currentEntity.setContent(currentEntity.getContent() + markContext.getInnerHtml(this.mark(), innerLine));
             return currentEntity;
         }
 
         //the next letter must be ' '
         tempPointer++;
-        if (tempPointer>=innerLine.length()||innerLine.charAt(tempPointer) != CHAR_SYMBOL.BLANK) {
+        if (tempPointer>=innerLine.length()||innerLine.charAt(tempPointer) != CharSymbol.BLANK) {
             currentEntity.setContent(currentEntity.getContent() + markContext.getInnerHtml(this.mark(), innerLine));
             return currentEntity;
         }
@@ -104,13 +101,13 @@ public class OrderedListParser extends AbstractListParser {
     private String parseTagList(List<TagListEntity> tags, Integer intent) {
         StringBuilder ol = new StringBuilder();
         for (TagListEntity tag : tags) {
-            ol.append(String.format("<li>%1$s</li>\n", tag.getContent()));
+            ol.append(String.format("<li>%1$s</li>%n", tag.getContent()));
             if (!CollectionsUtility.isNullOrEmpty(tag.getChildren())) {
                 ol.append(this.parseTagList(tag.getChildren(), tag.getIndent()));
             }
         }
         if (ol.length() > 0) {
-            ol.insert(0, String.format("<ol class=\"ol%1$s\">\n", intent == null ? "" : "_" + intent));
+            ol.insert(0, String.format("<ol class=\"ol%1$s\">%n", intent == null ? "" : "_" + intent));
             ol.append("</ol>\n");
         }
         return ol.toString();

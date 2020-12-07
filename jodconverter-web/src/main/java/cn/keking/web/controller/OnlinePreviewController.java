@@ -10,11 +10,9 @@ import cn.keking.utils.DownloadUtils;
 import cn.keking.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,18 +23,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author yudian-it
- */
-
-
-/**
  * Author：houzheng
  * Date：11-18
  * 联机预览控制器
  * 实现联机预览功能
- *
  */
-
 @Controller
 public class OnlinePreviewController {
 
@@ -54,7 +45,6 @@ public class OnlinePreviewController {
      * Author：houzheng
      * Date：11-18
      * 构造器，四个属性
-     *
      */
     public OnlinePreviewController(FilePreviewFactory filePreviewFactory,
                                    FileUtils fileUtils,
@@ -72,14 +62,8 @@ public class OnlinePreviewController {
      * 根据文件的类型返回相应的FilePreview接口的实现类
      * 再调用其filePreviewHandle()方法进行文件解析转换
      */
-    @RequestMapping(value = "/onlinePreview")
-    /**
-     * Author：houzheng
-     * Date：11-18
-     * 联机预览
-     *
-     */
-    public String onlinePreview(String url, Model model, HttpServletRequest req) {
+    @GetMapping(value = "/onlinePreview")
+    public String onlinePreview(String url, Model model, HttpServletRequest req) throws InterruptedException {
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
         model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
@@ -89,13 +73,12 @@ public class OnlinePreviewController {
         return filePreview.filePreviewHandle(url, model, fileAttribute);
     }
 
-    @RequestMapping(value = "picturesPreview")
     /**
      * Author：houzheng
      * Date：11-18
      * 图片预览
-     *
      */
+    @GetMapping(value = "/picturesPreview")
     public String picturesPreview(Model model, HttpServletRequest req) throws UnsupportedEncodingException {
         String urls = req.getParameter("urls");
         String currentUrl = req.getParameter("currentUrl");
@@ -105,9 +88,9 @@ public class OnlinePreviewController {
         String decodedCurrentUrl = URLDecoder.decode(currentUrl, "utf-8");
         // 抽取文件并返回文件列表
         String[] imgs = decodedUrl.split("\\|");
-        List imgurls = Arrays.asList(imgs);
+        List<String> imgurls = Arrays.asList(imgs);
         model.addAttribute("imgurls", imgurls);
-        model.addAttribute("currentUrl",decodedCurrentUrl);
+        model.addAttribute("currentUrl", decodedCurrentUrl);
         return "picture";
     }
 
@@ -115,10 +98,10 @@ public class OnlinePreviewController {
      * 根据url获取文件内容
      * 当pdfjs读取存在跨域问题的文件时将通过此接口读取
      *
-     * @param urlPath url
+     * @param urlPath  url
      * @param response response
      */
-    @RequestMapping(value = "/getCorsFile", method = RequestMethod.GET)
+    @GetMapping(value = "/getCorsFile")
     public void getCorsFile(String urlPath, HttpServletResponse response) {
         logger.info("下载跨域pdf文件url：{}", urlPath);
         try {
@@ -131,9 +114,11 @@ public class OnlinePreviewController {
 
     /**
      * 通过api接口入队
+     * 猜测是利用GET方法（？？？）
+     *
      * @param url 请编码后在入队
      */
-    @RequestMapping("/addTask")
+    @GetMapping(value = "/addTask")
     @ResponseBody
     public String addQueueTask(String url) {
         logger.info("添加转码队列url：{}", url);

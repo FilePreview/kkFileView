@@ -22,6 +22,10 @@ import java.nio.charset.StandardCharsets;
  */
 public class FtpUtils {
 
+    private  FtpUtils(){
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FtpUtils.class);
 
     /**
@@ -46,7 +50,7 @@ public class FtpUtils {
             ftpClient.disconnect();
         }
         ftpClient.setControlEncoding(controlEncoding);
-        ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+        ftpClient.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
         return ftpClient;
     }
 
@@ -81,9 +85,8 @@ public class FtpUtils {
             boolean downloadResult = ftpClient.retrieveFile(new String(remoteFilePath.getBytes(controlEncoding), StandardCharsets.ISO_8859_1), outputStream);
             LOGGER.debug("FTP download result {}", downloadResult);
             outputStream.flush();
-            outputStream.close();
         }catch (Exception e){
-            e.printStackTrace();
+            LOGGER.info("Exception ",e);
         }
         ftpClient.logout();
         ftpClient.disconnect();

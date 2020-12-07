@@ -1,6 +1,9 @@
 package cn.keking.markdown.constant.magic;
 
-public class CHAR_SYMBOL {
+public class CharSymbol {
+    private CharSymbol(){
+        throw new IllegalStateException("Utility class");
+    }
     /**
      * 空格
      */

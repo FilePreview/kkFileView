@@ -85,7 +85,7 @@ public class Convert {
         return options;
     }
 
-    public static void main(String[] arguments) throws ParseException, JSONException, IOException {
+    public static void main(String[] arguments) throws ParseException, JSONException, IOException,InterruptedException {
 
         /**
          * @author 庞新程
@@ -126,12 +126,7 @@ public class Convert {
          * author: Qin Huihuang Date:2020-11-24
          *
          * Retrieve any left-over non-recognized options and arguments
-         * case1:
-         *      the first fileName: the input file name
-         *      the second fileName: where the output file locates
-         *
-         * case2:
-         *      input-file [input-file...]
+         * input-file [input-file...]
          */
         String[] fileNames = commandLine.getArgs();
         if ((outputFormat == null && fileNames.length != 2) || fileNames.length < 1) {
@@ -182,8 +177,8 @@ public class Convert {
          * 设置了执行时间
          */
         if (commandLine.hasOption(OPTION_TIMEOUT.getOpt())) {
-            int timeout = Integer.parseInt(commandLine.getOptionValue(OPTION_TIMEOUT.getOpt()));
-            configuration.setTaskExecutionTimeout(timeout * 1000);
+            long timeout = Long.parseLong(commandLine.getOptionValue(OPTION_TIMEOUT.getOpt()));
+            configuration.setTaskExecutionTimeout(timeout * 1000L);
         }
 
         /**
