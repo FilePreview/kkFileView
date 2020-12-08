@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @auther: chenjh
- * @time: 2019/4/2 18:02
- * @description
+ * @author chenjh
+ * @time 2019/4/2 18:02
  */
 @ConditionalOnExpression("'${cache.type:default}'.equals('redis')")
 @Service

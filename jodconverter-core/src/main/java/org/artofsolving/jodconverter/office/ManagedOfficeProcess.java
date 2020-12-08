@@ -19,13 +19,12 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.java.accessibility.util.TopLevelWindowListener;
 import com.sun.star.frame.XDesktop;
 import com.sun.star.lang.DisposedException;
 
 class ManagedOfficeProcess {
 
-	private static final Integer EXIT_CODE_NEW_INSTALLATION = Integer.valueOf(81);
+	private static final Integer EXIT_CODE_NEW_INSTALLATION = 81;
 
 	private final ManagedOfficeProcessSettings settings;
 

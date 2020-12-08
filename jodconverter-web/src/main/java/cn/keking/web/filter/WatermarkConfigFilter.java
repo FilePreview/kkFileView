@@ -20,7 +20,7 @@ public class WatermarkConfigFilter implements Filter {
      */
     @Override
     public void init(FilterConfig filterConfig) {
-        throw new UnsupportedOperationException();
+        // do nothing but have to be overridden
     }
 
     @Override
@@ -46,6 +46,6 @@ public class WatermarkConfigFilter implements Filter {
      */
     @Override
     public void destroy() {
-        throw new UnsupportedOperationException();
+        // do nothing but have to be overridden
     }
 }

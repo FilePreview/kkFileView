@@ -12,9 +12,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * @auther: chenjh
- * @time: 2019/4/2 17:21
- * @description
+ * @author chenjh
+ * @time 2019/4/2 17:21
  */
 @Service
 @ConditionalOnExpression("'${cache.type:default}'.equals('jdk')")

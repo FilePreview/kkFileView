@@ -12,7 +12,6 @@
 //
 package org.artofsolving.jodconverter.office;
 
-import java.math.BigDecimal;
 
 /**
  * Represents an error condition that can be temporary, i.e. that could go

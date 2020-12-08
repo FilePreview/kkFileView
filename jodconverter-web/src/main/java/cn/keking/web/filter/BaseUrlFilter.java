@@ -34,7 +34,7 @@ public class BaseUrlFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-        throw new UnsupportedOperationException();
+        // do nothing but has to be override
     }
 
     /**
@@ -70,6 +70,6 @@ public class BaseUrlFilter implements Filter {
      */
     @Override
     public void destroy() {
-        throw new UnsupportedOperationException();
+        // do nothing but have to be override
     }
 }

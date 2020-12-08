@@ -54,7 +54,7 @@ public class TrustHostFilter implements Filter {
 
     @Override
     public void destroy() {
-        throw new UnsupportedOperationException();
+        // do nothing but have to be overridden
     }
 
     /**
