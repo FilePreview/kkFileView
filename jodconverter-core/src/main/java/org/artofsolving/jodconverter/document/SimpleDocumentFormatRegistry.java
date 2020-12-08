@@ -40,7 +40,6 @@ public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
             return null;
         }
         String lowerExtension = extension.toLowerCase();
-        //TODO keep a documentByExtension map instead
 		for (DocumentFormat format : documentFormats) {
 			if (format.getExtension().equals(lowerExtension)) {
 				return format;
@@ -59,7 +58,6 @@ public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
         if (mediaType == null) {
             return null;
         }
-        //TODO keep a documentByMediaType map instead
         for (DocumentFormat format : documentFormats) {
             if (format.getMediaType().equals(mediaType)) {
                 return format;

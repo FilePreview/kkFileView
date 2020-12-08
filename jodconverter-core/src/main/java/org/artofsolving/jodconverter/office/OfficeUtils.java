@@ -13,12 +13,11 @@
 //
 package org.artofsolving.jodconverter.office;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.Iterator;
+import java.io.*;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.artofsolving.jodconverter.util.PlatformUtils;
 
@@ -30,13 +29,14 @@ public class OfficeUtils {
     public static final String SERVICE_DESKTOP = "com.sun.star.frame.Desktop";
     public static final String OFFICE_HOME_KEY = "office.home";
     public static final String DEFAULT_OFFICE_HOME_VALUE = "default";
+    private static final Logger LOGGER = Logger.getLogger(OfficeUtils.class.getName());
 
     private OfficeUtils() {
         throw new AssertionError("utility class must not be instantiated");
     }
 
     public static <T> T cast(Class<T> type, Object object) {
-        return (T) UnoRuntime.queryInterface(type, object);
+        return UnoRuntime.queryInterface(type, object);
     }
 
     public static PropertyValue property(String name, Object value) {
@@ -56,7 +56,7 @@ public class OfficeUtils {
                 Map<String,Object> subProperties = (Map<String,Object>) value;
                 value = toUnoProperties(subProperties);
             }
-            propertyValues[i++] = property((String) entry.getKey(), value);
+            propertyValues[i++] = property(entry.getKey(), value);
         }
         return propertyValues;
     }
@@ -74,11 +74,22 @@ public class OfficeUtils {
          * 配置文件的路径,具体来说就是jodconveter-web/src/main/config/application.properties
          */
         String customizedConfigPath = getCustomizedConfigPath();
+        BufferedReader bufferedReader = null;
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(customizedConfigPath));
+            bufferedReader = new BufferedReader(new FileReader(customizedConfigPath));
             properties.load(bufferedReader);
             restorePropertiesFromEnvFormat(properties);
-        } catch (Exception e) {}
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE,"IOException",e);
+        } finally {
+            if(bufferedReader!=null){
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    LOGGER.log(Level.SEVERE,"Close Reader Error",e);
+                }
+            }
+        }
         /*
          * author:Qin Huihuang date:2020-11-24
          *
@@ -176,18 +187,14 @@ public class OfficeUtils {
     public static String getCustomizedConfigPath() {
         String homePath = OfficeUtils.getHomePath();
         String separator = java.io.File.separator;
-        String configFilePath = homePath + separator + "config" + separator + "application.properties";
-        return configFilePath;
+        return homePath + separator + "config" + separator + "application.properties";
     }
 
     /**
      * SpringBoot application.properties 支持从环境变量获取值
-     * @param properties
      */
-    public synchronized static void restorePropertiesFromEnvFormat(Properties properties) {
-        Iterator<Map.Entry<Object, Object>> iterator = properties.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Object, Object> entry = iterator.next();
+    public  static synchronized void restorePropertiesFromEnvFormat(Properties properties) {
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             String key = entry.getKey().toString();
             String value = entry.getValue().toString();
             if (value.trim().startsWith("${") && value.trim().endsWith("}")) {

@@ -12,19 +12,22 @@
 //
 package org.artofsolving.jodconverter.office;
 
+import java.util.logging.Logger;
+
 abstract class Retryable {
+    private static final Logger LOGGER = Logger.getLogger(Retryable.class.getName());
 
     /**
      * @throws TemporaryException for an error condition that can be temporary - i.e. retrying later could be successful
      * @throws Exception for all other error conditions
      */
-    protected abstract void attempt() throws TemporaryException, Exception;
+    protected abstract void attempt() throws  Exception;
 
-    public void execute(long interval, long timeout) throws RetryTimeoutException, Exception {
+    public void execute(long interval, long timeout) throws  Exception {
         execute(0L, interval, timeout);
     }
 
-    public void execute(long delay, long interval, long timeout) throws RetryTimeoutException, Exception {
+    public void execute(long delay, long interval, long timeout) throws  Exception {
         long start = System.currentTimeMillis();
         if (delay > 0L) {
             sleep(delay);
@@ -48,7 +51,8 @@ abstract class Retryable {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException interruptedException) {
-            // continue
+           LOGGER.warning("interrupted");
+           Thread.currentThread().interrupt();
         }
     }
 

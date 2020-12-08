@@ -5,6 +5,8 @@ import cn.keking.model.FileAttribute;
 import cn.keking.model.FileType;
 import cn.keking.service.cache.CacheService;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -33,6 +35,8 @@ public class FileUtils {
      * 其sun.jnu.encoding完全相同，而file.encoding即使在同一个JAVA应用程序中，JAVA文件的编码也可以不一样。
      */
     private static final String DEFAULT_CONVERTER_CHARSET = System.getProperty("sun.jnu.encoding");
+
+    private  static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 
     /*
      * Author:FanPan Date:2020-11-19
@@ -98,27 +102,27 @@ public class FileUtils {
         String[] media = ConfigConstants.getMedia();
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
         if (listPictureTypes().contains(fileType.toLowerCase())) {
-            return FileType.picture;
+            return FileType.PICTURE;
         }
         if (listArchiveTypes().contains(fileType.toLowerCase())) {
-            return FileType.compress;
+            return FileType.COMPRESS;
         }
         if (listOfficeTypes().contains(fileType.toLowerCase())) {
-            return FileType.office;
+            return FileType.OFFICE;
         }
         if (Arrays.asList(simText).contains(fileType.toLowerCase())) {
-            return FileType.simText;
+            return FileType.SIM_TEXT;
         }
         if (Arrays.asList(media).contains(fileType.toLowerCase())) {
-            return FileType.media;
+            return FileType.MEDIA;
         }
         if ("pdf".equalsIgnoreCase(fileType)) {
-            return FileType.pdf;
+            return FileType.PDF;
         }
         if ("dwg".equalsIgnoreCase(fileType)) {
-            return FileType.cad;
+            return FileType.CAD;
         }
-        return FileType.other;
+        return FileType.OTHER;
     }
     /**
      * 从url中剥离出文件名
@@ -234,15 +238,12 @@ public class FileUtils {
         try ( InputStream in= new FileInputStream(file);) {
 
             byte[] b = new byte[3];
-            int i = in.read(b);
-            in.close();
             if (b[0] == -17 && b[1] == -69 && b[2] == -65) {
                 enc = StandardCharsets.UTF_8.name();
             }
         }catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.info("IOException",e);
         }
-        System.out.println("文件编码格式为:" + enc);
         return enc;
     }
 
@@ -266,14 +267,14 @@ public class FileUtils {
             sb.append("<script src=\"js/excel.header.js\" type=\"text/javascript\"></script>");
             sb.append("<link rel=\"stylesheet\" href=\"bootstrap/css/bootstrap.min.css\">");
         } catch (IOException e) {
-            e.printStackTrace();
+           LOGGER.info("IOException ",e);
         }
         // 重新写入文件
         try(FileOutputStream fos = new FileOutputStream(outFilePath);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8))) {
             writer.write(sb.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+           LOGGER.info("IOException",e);
         }
     }
     /**
@@ -328,12 +329,8 @@ public class FileUtils {
         String strAllParam = null;
         strURL = strURL.trim();
         String[] arrSplit = strURL.split("[?]");
-        if(strURL.length() > 1)  {
-            if(arrSplit.length > 1) {
-                if(arrSplit[1] != null) {
-                    strAllParam=arrSplit[1];
-                }
-            }
+        if(strURL.length() > 1 && arrSplit.length > 1 && arrSplit[1]!=null)  {
+            strAllParam=arrSplit[1];
         }
         return strAllParam;
     }

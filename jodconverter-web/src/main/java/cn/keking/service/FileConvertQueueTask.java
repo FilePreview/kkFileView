@@ -70,7 +70,7 @@ public class FileConvertQueueTask {
                         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
                         FileType fileType = fileAttribute.getType();
                         logger.info("正在处理预览转换任务，url：{}，预览类型：{}", url, fileType);
-                        if(fileType.equals(FileType.compress) || fileType.equals(FileType.office) || fileType.equals(FileType.cad)) {
+                        if(fileType.equals(FileType.COMPRESS) || fileType.equals(FileType.OFFICE) || fileType.equals(FileType.CAD)) {
                             FilePreview filePreview = previewFactory.get(fileAttribute);
                             filePreview.filePreviewHandle(url, new ExtendedModelMap(), fileAttribute);
                         } else {
@@ -79,9 +79,9 @@ public class FileConvertQueueTask {
                     }
                 } catch (Exception e) {
                     try {
-                        Thread.sleep(1000*10);
-                    } catch (Exception ex){
-                        ex.printStackTrace();
+                        Thread.sleep(1000L*10L);
+                    } catch (InterruptedException ex){
+                        logger.error("InterruptedException:",ex);
                     }
                     logger.info("处理预览转换任务异常，url：{}", url, e);
                 }

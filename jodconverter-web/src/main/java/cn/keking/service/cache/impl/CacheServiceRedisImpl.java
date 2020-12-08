@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @auther: chenjh
- * @time: 2019/4/2 18:02
- * @description
+ * @author chenjh
+ * @time 2019/4/2 18:02
  */
 @ConditionalOnExpression("'${cache.type:default}'.equals('redis')")
 @Service
@@ -29,17 +28,17 @@ public class CacheServiceRedisImpl implements CacheService {
 
     @Override
     public void initPDFCachePool(Integer capacity) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void initIMGCachePool(Integer capacity) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void initPdfImagesCachePool(Integer capacity) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override

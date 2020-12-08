@@ -24,7 +24,7 @@ import com.sun.star.lang.DisposedException;
 
 class ManagedOfficeProcess {
 
-	private static final Integer EXIT_CODE_NEW_INSTALLATION = Integer.valueOf(81);
+	private static final Integer EXIT_CODE_NEW_INSTALLATION = 81;
 
 	private final ManagedOfficeProcessSettings settings;
 
@@ -35,7 +35,7 @@ class ManagedOfficeProcess {
 
 	private final Logger logger = Logger.getLogger(getClass().getName());
 
-	public ManagedOfficeProcess(ManagedOfficeProcessSettings settings) throws OfficeException {
+	public ManagedOfficeProcess(ManagedOfficeProcessSettings settings)  {
 		this.settings = settings;
 		process = new OfficeProcess(settings.getOfficeHome(), settings.getUnoUrl(), settings.getRunAsArgs(), settings.getTemplateProfileDir(), settings.getWorkDir(), settings
 				.getProcessManager());
@@ -46,7 +46,7 @@ class ManagedOfficeProcess {
 		return connection;
 	}
 
-	public void startAndWait() throws OfficeException {
+	public void startAndWait()  {
 		Future<?> future = executor.submit(new Runnable() {
 			public void run() {
 				doStartProcessAndConnect();
@@ -59,7 +59,7 @@ class ManagedOfficeProcess {
 		}
 	}
 
-	public void stopAndWait() throws OfficeException {
+	public void stopAndWait()  {
 		Future<?> future = executor.submit(new Runnable() {
 			public void run() {
 				doStopProcess();
@@ -108,11 +108,11 @@ class ManagedOfficeProcess {
 		});
 	}
 
-	private void doStartProcessAndConnect() throws OfficeException {
+	private void doStartProcessAndConnect()  {
 		try {
 			process.start();
 			new Retryable() {
-				protected void attempt() throws TemporaryException, Exception {
+				protected void attempt() throws Exception {
 					try {
 						connection.connect();
 					} catch (ConnectException connectException) {
@@ -150,20 +150,20 @@ class ManagedOfficeProcess {
 		doEnsureProcessExited();
 	}
 
-	private void doEnsureProcessExited() throws OfficeException {
+	private void doEnsureProcessExited()  {
 		try {
 			int exitCode = process.getExitCode(settings.getRetryInterval(), settings.getRetryTimeout());
-			logger.info("process exited with code " + exitCode);
+			logger.log(Level.INFO,"process exited with code:",exitCode);
 		} catch (RetryTimeoutException retryTimeoutException) {
 			doTerminateProcess();
 		}
 		process.deleteProfileDir();
 	}
 
-	private void doTerminateProcess() throws OfficeException {
+	private void doTerminateProcess() {
 		try {
 			int exitCode = process.forciblyTerminate(settings.getRetryInterval(), settings.getRetryTimeout());
-			logger.info("process forcibly terminated with code " + exitCode);
+			logger.log(Level.INFO,"process forcibly terminated with code ",exitCode);
 		} catch (Exception exception) {
 			throw new OfficeException("could not terminate process", exception);
 		}

@@ -30,7 +30,7 @@ class ProcessPoolOfficeManager implements OfficeManager {
 
     private volatile boolean running = false;
 
-    private final Logger logger = Logger.getLogger(ProcessPoolOfficeManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProcessPoolOfficeManager.class.getName());
 
     /**
      * @author 庞新程
@@ -39,7 +39,6 @@ class ProcessPoolOfficeManager implements OfficeManager {
      * @param runAsArgs 运行时参数
      * @param templateProfileDir 模板配置目录
      * @param workDir 工作目录
-     * @param retryTimeout
      * @param taskQueueTimeout 排队时限
      * @param taskExecutionTimeout 任务执行时限
      * @param maxTasksPerProcess 每个进程的最大任务数
@@ -63,18 +62,18 @@ class ProcessPoolOfficeManager implements OfficeManager {
             settings.setProcessManager(processManager);
             pooledManagers[i] = new PooledOfficeManager(settings);
         }
-        logger.info("ProcessManager implementation is " + processManager.getClass().getSimpleName());
+        LOGGER.info("ProcessManager implementation is " + processManager.getClass().getSimpleName());
     }
 
-    public synchronized void start() throws OfficeException {
-        for (int i = 0; i < pooledManagers.length; i++) {
-            pooledManagers[i].start();
-            releaseManager(pooledManagers[i]);
+    public synchronized void start() throws  InterruptedException {
+        for (PooledOfficeManager pooledManager : pooledManagers) {
+            pooledManager.start();
+            releaseManager(pooledManager);
         }
         running = true;
     }
 
-    public void execute(OfficeTask task) throws IllegalStateException, OfficeException {
+    public void execute(OfficeTask task) throws  InterruptedException {
         if (!running) {
             throw new IllegalStateException("this OfficeManager is currently stopped");
         }
@@ -92,29 +91,31 @@ class ProcessPoolOfficeManager implements OfficeManager {
         }
     }
 
-    public synchronized void stop() throws OfficeException {
+    public synchronized void stop() {
         running = false;
-        logger.info("stopping");
+        LOGGER.info("stopping");
         pool.clear();
-        for (int i = 0; i < pooledManagers.length; i++) {
-            pooledManagers[i].stop();
+        for (PooledOfficeManager pooledManager : pooledManagers) {
+            pooledManager.stop();
         }
-        logger.info("stopped");
+        LOGGER.info("stopped");
     }
 
-    private PooledOfficeManager acquireManager() {
+    private PooledOfficeManager acquireManager() throws InterruptedException {
         try {
             return pool.poll(taskQueueTimeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException interruptedException) {
-            throw new OfficeException("interrupted", interruptedException);
+            LOGGER.warning("interrupted");
+            throw interruptedException;
         }
     }
 
-    private void releaseManager(PooledOfficeManager manager) {
+    private void releaseManager(PooledOfficeManager manager) throws InterruptedException {
         try {
             pool.put(manager);
         } catch (InterruptedException interruptedException) {
-            throw new OfficeException("interrupted", interruptedException);
+            LOGGER.warning("interrupted");
+            throw interruptedException;
         }
     }
 

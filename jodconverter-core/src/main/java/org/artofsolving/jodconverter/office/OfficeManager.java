@@ -19,7 +19,6 @@ package org.artofsolving.jodconverter.office;
  * An OfficeManager implementation will typically manage one or more
  * {@link OfficeConnection}s.
  * OfficeManager用于管理office task
- * OfficeManager实现通常会管理一个或多个OfficeConnections。
  */
 public interface OfficeManager {
 
@@ -29,21 +28,21 @@ public interface OfficeManager {
      * @param task
      * @throws OfficeException
      */
-    void execute(OfficeTask task) throws OfficeException;
+    void execute(OfficeTask task) throws InterruptedException;
 
     /**
      * @author 庞新程
      * 启动
      * @throws OfficeException
      */
-    void start() throws OfficeException;
+    void start() throws InterruptedException;
 
     /**
      * @author 庞新程
      * 停止
      * @throws OfficeException
      */
-    void stop() throws OfficeException;
+    void stop() ;
 
     /**
      * @author 庞新程

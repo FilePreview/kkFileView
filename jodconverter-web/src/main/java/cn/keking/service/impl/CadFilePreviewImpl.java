@@ -50,7 +50,7 @@ public class CadFilePreviewImpl implements FilePreview {
     public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute) {
         // 预览Type，参数传了就取参数的，没传取系统默认
         String officePreviewType = model.asMap().get("officePreviewType") == null ? ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
-        String baseUrl = BaseUrlFilter.getBaseUrl();
+        String baseUrl = BaseUrlFilter.getBaseURL();
         String suffix=fileAttribute.getSuffix();
         String fileName=fileAttribute.getName();
         String pdfName = fileName.substring(0, fileName.lastIndexOf(".") + 1) + "pdf";

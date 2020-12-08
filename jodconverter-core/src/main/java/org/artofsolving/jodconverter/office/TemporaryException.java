@@ -12,7 +12,6 @@
 //
 package org.artofsolving.jodconverter.office;
 
-import java.math.BigDecimal;
 
 /**
  * Represents an error condition that can be temporary, i.e. that could go
@@ -25,8 +24,5 @@ class TemporaryException extends Exception {
     public TemporaryException(Throwable cause) {
         super(cause);
     }
-
-    public static void main(String[] args) {
-        System.out.println(new BigDecimal("7412611111110.99"));
-    }
+    
 }

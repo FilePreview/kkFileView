@@ -31,6 +31,7 @@ public class DefaultOfficeManagerConfiguration {
      * @author 庞新程
      */
     public static final long DEFAULT_RETRY_TIMEOUT = 120000L;
+    public static final String OFFICE_HOME = "officeHome";
 
 
     /*
@@ -64,8 +65,8 @@ public class DefaultOfficeManagerConfiguration {
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
-    public DefaultOfficeManagerConfiguration setOfficeHome(String officeHome) throws NullPointerException, IllegalArgumentException {
-        checkArgumentNotNull("officeHome", officeHome);
+    public DefaultOfficeManagerConfiguration setOfficeHome(String officeHome) {
+        checkArgumentNotNull(OFFICE_HOME, officeHome);
         return setOfficeHome(new File(officeHome));
     }
 
@@ -77,9 +78,9 @@ public class DefaultOfficeManagerConfiguration {
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
-    public DefaultOfficeManagerConfiguration setOfficeHome(File officeHome) throws NullPointerException, IllegalArgumentException  {
-        checkArgumentNotNull("officeHome", officeHome);
-        checkArgument("officeHome", officeHome.isDirectory(), "must exist and be a directory");
+    public DefaultOfficeManagerConfiguration setOfficeHome(File officeHome)  {
+        checkArgumentNotNull(OFFICE_HOME, officeHome);
+        checkArgument(OFFICE_HOME, officeHome.isDirectory(), "must exist and be a directory");
         this.officeHome = officeHome;
         return this;
     }
@@ -91,7 +92,7 @@ public class DefaultOfficeManagerConfiguration {
      * @return
      * @throws NullPointerException
      */
-    public DefaultOfficeManagerConfiguration setConnectionProtocol(OfficeConnectionProtocol connectionProtocol) throws NullPointerException {
+    public DefaultOfficeManagerConfiguration setConnectionProtocol(OfficeConnectionProtocol connectionProtocol) {
         checkArgumentNotNull("connectionProtocol", connectionProtocol);
         this.connectionProtocol = connectionProtocol;
         return this;
@@ -116,7 +117,7 @@ public class DefaultOfficeManagerConfiguration {
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
-    public DefaultOfficeManagerConfiguration setPortNumbers(int... portNumbers) throws NullPointerException, IllegalArgumentException {
+    public DefaultOfficeManagerConfiguration setPortNumbers(int... portNumbers) {
         checkArgumentNotNull("portNumbers", portNumbers);
         checkArgument("portNumbers", portNumbers.length > 0, "must not be empty");
         this.portNumbers = portNumbers;
@@ -130,7 +131,7 @@ public class DefaultOfficeManagerConfiguration {
      * @return
      * @throws NullPointerException
      */
-    public DefaultOfficeManagerConfiguration setPipeName(String pipeName) throws NullPointerException {
+    public DefaultOfficeManagerConfiguration setPipeName(String pipeName)  {
         checkArgumentNotNull("pipeName", pipeName);
         this.pipeNames = new String[] { pipeName };
         return this;
@@ -144,7 +145,7 @@ public class DefaultOfficeManagerConfiguration {
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
-    public DefaultOfficeManagerConfiguration setPipeNames(String... pipeNames) throws NullPointerException, IllegalArgumentException {
+    public DefaultOfficeManagerConfiguration setPipeNames(String... pipeNames)  {
         checkArgumentNotNull("pipeNames", pipeNames);
         checkArgument("pipeNames", pipeNames.length > 0, "must not be empty");
         this.pipeNames = pipeNames;
@@ -169,7 +170,7 @@ public class DefaultOfficeManagerConfiguration {
      * @return
      * @throws IllegalArgumentException
      */
-    public DefaultOfficeManagerConfiguration setTemplateProfileDir(File templateProfileDir) throws IllegalArgumentException {
+    public DefaultOfficeManagerConfiguration setTemplateProfileDir(File templateProfileDir)  {
         if (templateProfileDir != null) {
             checkArgument("templateProfileDir", templateProfileDir.isDirectory(), "must exist and be a directory");
         }
@@ -235,7 +236,7 @@ public class DefaultOfficeManagerConfiguration {
      * @return
      * @throws NullPointerException
      */
-    public DefaultOfficeManagerConfiguration setProcessManager(ProcessManager processManager) throws NullPointerException {
+    public DefaultOfficeManagerConfiguration setProcessManager(ProcessManager processManager)  {
         checkArgumentNotNull("processManager", processManager);
         this.processManager = processManager;
         return this;
@@ -259,7 +260,7 @@ public class DefaultOfficeManagerConfiguration {
      * @return
      * @throws IllegalStateException
      */
-    public OfficeManager buildOfficeManager() throws IllegalStateException {
+    public OfficeManager buildOfficeManager()  {
         if (officeHome == null) {
             throw new IllegalStateException("officeHome not set and could not be auto-detected");
         } else if (!officeHome.isDirectory()) {
@@ -301,11 +302,11 @@ public class DefaultOfficeManagerConfiguration {
         if (isSigarAvailable()) {//Sigar是否可用
             return new SigarProcessManager();
         } else if (PlatformUtils.isLinux()) {
-        	LinuxProcessManager processManager = new LinuxProcessManager();
+        	LinuxProcessManager linuxProcessManager = new LinuxProcessManager();
         	if (runAsArgs != null) {
-        		processManager.setRunAsArgs(runAsArgs);
+        		linuxProcessManager.setRunAsArgs(runAsArgs);
         	}
-        	return processManager;
+        	return linuxProcessManager;
         } else {
             // NOTE: UnixProcessManager can't be trusted to work on Solaris
             // because of the 80-char limit on ps output there  
@@ -322,7 +323,6 @@ public class DefaultOfficeManagerConfiguration {
         try {
             Class.forName("org.hyperic.sigar.Sigar", false, getClass().getClassLoader());
             return true;
-//            return false;
         } catch (ClassNotFoundException classNotFoundException) {
             return false;
         }
@@ -334,7 +334,7 @@ public class DefaultOfficeManagerConfiguration {
      * @param argValue 待检查参数
      * @throws NullPointerException
      */
-    private void checkArgumentNotNull(String argName, Object argValue) throws NullPointerException {
+    private void checkArgumentNotNull(String argName, Object argValue)  {
         if (argValue == null) {
             throw new NullPointerException(argName + " must not be null");
         }
@@ -347,7 +347,7 @@ public class DefaultOfficeManagerConfiguration {
      * @param message
      * @throws IllegalArgumentException
      */
-    private void checkArgument(String argName, boolean condition, String message) throws IllegalArgumentException {
+    private void checkArgument(String argName, boolean condition, String message)  {
         if (!condition) {
             throw new IllegalArgumentException(argName + " " + message);
         }

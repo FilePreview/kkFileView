@@ -26,7 +26,7 @@ public class OfficeToPdf {
      * @Date 2020-11-19
      *
      */
-    public void openOfficeToPDF(String inputFilePath, String outputFilePath) {
+    public void openOfficeToPDF(String inputFilePath, String outputFilePath) throws InterruptedException {
         office2pdf(inputFilePath, outputFilePath);
     }
 
@@ -36,9 +36,9 @@ public class OfficeToPdf {
      * @Date 2020-11-19
      *
      */
-    public static void converterFile(File inputFile, String outputFilePath_end,
-                                     OfficeDocumentConverter converter) {
-        File outputFile = new File(outputFilePath_end);
+    public static void converterFile(File inputFile, String outputFilePathEnd,
+                                     OfficeDocumentConverter converter) throws InterruptedException {
+        File outputFile = new File(outputFilePathEnd);
         // 假如目标路径不存在,则新建该路径
         if (!outputFile.getParentFile().exists()) {
             outputFile.getParentFile().mkdirs();
@@ -53,17 +53,17 @@ public class OfficeToPdf {
      * @param outputFilePath
      * 将office文件转换为pdf
      */
-    public void office2pdf(String inputFilePath, String outputFilePath) {
+    public void office2pdf(String inputFilePath, String outputFilePath) throws InterruptedException {
         OfficeDocumentConverter converter = converterUtils.getDocumentConverter();
         if (null != inputFilePath) {
             File inputFile = new File(inputFilePath);
             // 判断目标文件路径是否为空
             if (null == outputFilePath) {
                 // 转换后的文件路径
-                String outputFilePath_end = getOutputFilePath(inputFilePath);
+                String outputFilePathEnd = getOutputFilePath(inputFilePath);
                 if (inputFile.exists()) {
                     // 找不到源文件, 则返回
-                    converterFile(inputFile, outputFilePath_end,converter);
+                    converterFile(inputFile, outputFilePathEnd,converter);
                 }
             } else {
                 if (inputFile.exists()) {

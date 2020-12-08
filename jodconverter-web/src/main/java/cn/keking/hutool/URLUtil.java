@@ -9,6 +9,9 @@ import java.nio.charset.StandardCharsets;
  *
  */
 public class URLUtil {
+	private URLUtil(){
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * 标准化URL字符串，包括：
@@ -21,7 +24,7 @@ public class URLUtil {
 	 * @return 标准化后的URL字符串
 	 */
 	public static String normalize(String url) {
-		return normalize(url, false, false);
+		return normalize(url, false);
 	}
 
 	/**
@@ -33,11 +36,10 @@ public class URLUtil {
 	 *
 	 * @param url URL字符串
 	 * @param isEncodeBody 是否对URL中body部分的中文和特殊字符做转义（不包括http:和/）
-	 * @param isEncodeParam 是否对URL中参数部分的中文和特殊字符做转义
 	 * @return 标准化后的URL字符串
 	 * @since 4.4.1
 	 */
-	public static String normalize(String url, boolean isEncodeBody, boolean isEncodeParam) {
+	public static String normalize(String url, boolean isEncodeBody) {
 		if (StrUtil.isBlank(url)) {
 			return url;
 		}

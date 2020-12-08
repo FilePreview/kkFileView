@@ -8,31 +8,25 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
- * @author chenjh
- * @since 2020/5/13 18:27
- */
-
-/**
  * Author：houzheng
  * Date：11-18
  * url过滤器
- *
  */
 public class BaseUrlFilter implements Filter {
 
-    private static String BASE_URL;
+    private static String baseURL;
+
     /**
      * Author：houzheng
      * Date：11-18
      * 获取baseurl
-     *
      */
-    public static String getBaseUrl() {
+    public static String getBaseURL() {
         String baseUrl;
         try {
-            baseUrl = (String) RequestContextHolder.currentRequestAttributes().getAttribute("baseUrl",0);
+            baseUrl = (String) RequestContextHolder.currentRequestAttributes().getAttribute("baseUrl", 0);
         } catch (Exception e) {
-            baseUrl = BASE_URL;
+            baseUrl = baseURL;
         }
         return baseUrl;
     }
@@ -40,13 +34,13 @@ public class BaseUrlFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-
+        // do nothing but has to be override
     }
+
     /**
      * Author：houzheng
      * Date：11-18
-     *检查url末尾是否有'/'，没有则添加
-     *
+     * 检查url末尾是否有'/'，没有则添加
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -55,7 +49,7 @@ public class BaseUrlFilter implements Filter {
         pathBuilder.append(request.getScheme()).append("://").append(request.getServerName()).append(":")
                 .append(request.getServerPort()).append(((HttpServletRequest) request).getContextPath()).append("/");
         String baseUrlTmp = ConfigConstants.getBaseUrl();
-        if (baseUrlTmp != null && !ConfigConstants.DEFAULT_BASE_URL.equals(baseUrlTmp.toLowerCase())) {
+        if (baseUrlTmp != null && !ConfigConstants.DEFAULT_BASE_URL.equalsIgnoreCase(baseUrlTmp)) {
             if (!baseUrlTmp.endsWith("/")) {
                 baseUrlTmp = baseUrlTmp.concat("/");
             }
@@ -63,19 +57,19 @@ public class BaseUrlFilter implements Filter {
         } else {
             baseUrl = pathBuilder.toString();
         }
-        BASE_URL = baseUrl;
+        baseURL = baseUrl;
         request.setAttribute("baseUrl", baseUrl);
         filterChain.doFilter(request, response);
     }
 
-    @Override
+
     /**
      * Author：houzheng
      * Date：11-18
      * 销毁
-     *
      */
+    @Override
     public void destroy() {
-
+        // do nothing but have to be override
     }
 }

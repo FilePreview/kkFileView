@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 @Service
 public class MediaFilePreviewImpl implements FilePreview {
 
+    public static final String MEDIA_URL = "mediaUrl";
     private final DownloadUtils downloadUtils;
 
     private final FileUtils fileUtils;
@@ -37,12 +38,12 @@ public class MediaFilePreviewImpl implements FilePreview {
                 model.addAttribute("msg", response.getMsg());
                 return "fileNotSupported";
             } else {
-                model.addAttribute("mediaUrl", BaseUrlFilter.getBaseUrl() + fileUtils.getRelativePath(response.getContent()));
+                model.addAttribute(MEDIA_URL, BaseUrlFilter.getBaseURL() + fileUtils.getRelativePath(response.getContent()));
             }
         } else {
-            model.addAttribute("mediaUrl", url);
+            model.addAttribute(MEDIA_URL, url);
         }
-        model.addAttribute("mediaUrl", url);
+        model.addAttribute(MEDIA_URL, url);
         String suffix=fileAttribute.getSuffix();
         if ("flv".equalsIgnoreCase(suffix)) {
             return "flv";

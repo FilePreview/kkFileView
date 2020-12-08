@@ -60,13 +60,13 @@ public class OfficeDocumentConverter {
     /*
      * 将输入文件解析到输出文件
      */
-    public void convert(File inputFile, File outputFile) {
+    public void convert(File inputFile, File outputFile) throws InterruptedException {
         String outputExtension = FilenameUtils.getExtension(outputFile.getName());
         DocumentFormat outputFormat = formatRegistry.getFormatByExtension(outputExtension);
         convert(inputFile, outputFile, outputFormat);
     }
 
-    public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) {
+    public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) throws InterruptedException {
         String inputExtension = FilenameUtils.getExtension(inputFile.getName());
         DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
         StandardConversionTask conversionTask = new StandardConversionTask(inputFile, outputFile, outputFormat);

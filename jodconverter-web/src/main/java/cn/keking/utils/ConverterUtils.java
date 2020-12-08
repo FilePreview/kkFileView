@@ -34,6 +34,7 @@ import java.util.Properties;
 @Component
 public class ConverterUtils {
 
+    public static final String SOFFICE_BIN = "soffice.bin";
     private final Logger logger = LoggerFactory.getLogger(ConverterUtils.class);
 
     private OfficeManager officeManager;
@@ -54,7 +55,7 @@ public class ConverterUtils {
      * @Date 2020-11-17
      */
     @PostConstruct
-    public void initOfficeManager() {
+    public void initOfficeManager() throws InterruptedException {
         File officeHome;
         /*
          *Author:FanPan Date:2020-11-17
@@ -143,16 +144,16 @@ public class ConverterUtils {
                     baos.write(b);
                 }
                 String s = baos.toString();
-                if (s.contains("soffice.bin")) {
+                if (s.contains(SOFFICE_BIN)) {
                     /*
                      *Author:FanPan Date:2020-11-17
                      *杀死正在运行的office进程
                      */
-                    Runtime.getRuntime().exec("taskkill /im " + "soffice.bin" + " /f");
+                    Runtime.getRuntime().exec("taskkill /im " + SOFFICE_BIN + " /f");
                     flag = true;
                 }
             } else {
-                Process p = Runtime.getRuntime().exec(new String[]{"sh","-c","ps -ef | grep " + "soffice.bin"});
+                Process p = Runtime.getRuntime().exec(new String[]{"sh","-c","ps -ef | grep " + SOFFICE_BIN});
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 InputStream os = p.getInputStream();
                 byte[] b = new byte[256];
@@ -160,8 +161,8 @@ public class ConverterUtils {
                     baos.write(b);
                 }
                 String s = baos.toString();
-                if (StringUtils.ordinalIndexOf(s, "soffice.bin", 3) > 0) {
-                    String[] cmd ={"sh","-c","kill -15 `ps -ef|grep " + "soffice.bin" + "|awk 'NR==1{print $2}'`"};
+                if (StringUtils.ordinalIndexOf(s, SOFFICE_BIN, 3) > 0) {
+                    String[] cmd ={"sh","-c","kill -15 `ps -ef|grep " + SOFFICE_BIN + "|awk 'NR==1{print $2}'`"};
                     Runtime.getRuntime().exec(cmd);
                     flag = true;
                 }

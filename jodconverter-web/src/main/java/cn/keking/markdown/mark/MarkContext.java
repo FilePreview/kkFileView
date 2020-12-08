@@ -1,6 +1,6 @@
 package cn.keking.markdown.mark;
 
-import cn.keking.markdown.constant.magic.CHAR_SYMBOL;
+import cn.keking.markdown.constant.magic.CharSymbol;
 import cn.keking.markdown.parser.MarkParser;
 import cn.keking.markdown.parser.impl.*;
 
@@ -15,10 +15,10 @@ public class MarkContext {
     }
 
     private static final int MARK_COUNT = 32;
-    public static final List<MARK> CONTAINER = new ArrayList<MARK>(MARK_COUNT);
-    public static final Map<MARK, MarkParser> MARK_PARSER_MAP = new HashMap<MARK, MarkParser>(MARK_COUNT);
-    public static final Map<MARK, List<MARK>> CHILD_MARK_PARSER = new HashMap<MARK, List<MARK>>(MARK_COUNT);
-    public static final List<MARK> BORROWABLE_BLANK = new ArrayList<MARK>(MARK_COUNT);
+    public static final List<MARK> CONTAINER = new ArrayList<>(MARK_COUNT);
+    public static final Map<MARK, MarkParser> MARK_PARSER_MAP = new HashMap<>(MARK_COUNT);
+    public static final Map<MARK, List<MARK>> CHILD_MARK_PARSER = new HashMap<>(MARK_COUNT);
+    public static final List<MARK> BORROWABLE_BLANK = new ArrayList<>(MARK_COUNT);
 
     /**
      * sort by key length
@@ -222,7 +222,6 @@ public class MarkContext {
             if (markEntity == null) {
                 continue;
             }
-            System.out.println(mark);
             this.setPointer(originalPointer);
             this.setTempNextMark(markEntity);
             return true;
@@ -243,7 +242,7 @@ public class MarkContext {
 
     public int detectFirstBlank(MARK mark, Integer pointer) {
         //the first letter must be \n
-        if (content.charAt(pointer) == CHAR_SYMBOL.ENTER) {
+        if (content.charAt(pointer) == CharSymbol.ENTER) {
             return pointer;
         }
         if (!BORROWABLE_BLANK.contains(mark)) {
@@ -252,7 +251,7 @@ public class MarkContext {
         if (pointer < 1) {
             return -1;
         }
-        if (content.charAt(--pointer) != CHAR_SYMBOL.ENTER) {
+        if (content.charAt(--pointer) != CharSymbol.ENTER) {
             return -1;
         }
         return pointer;

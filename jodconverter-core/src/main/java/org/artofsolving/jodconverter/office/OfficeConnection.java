@@ -16,6 +16,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.star.beans.XPropertySet;
@@ -49,7 +50,7 @@ class OfficeConnection implements OfficeContext {
         public void disposing(EventObject event) {
             if (connected) {
                 connected = false;
-                logger.info(String.format("disconnected: '%s'", unoUrl));
+                logger.log(Level.INFO,"disconnected:",unoUrl);
                 OfficeConnectionEvent connectionEvent = new OfficeConnectionEvent(OfficeConnection.this);
                 for (OfficeConnectionEventListener listener : connectionEventListeners) {
                     listener.disconnected(connectionEvent);
@@ -70,7 +71,7 @@ class OfficeConnection implements OfficeContext {
     }
 
     public void connect() throws ConnectException {
-        logger.fine(String.format("connecting with connectString '%s'", unoUrl));
+        logger.log(Level.FINE,"connecting with connect String: ",unoUrl);
         try {
             XComponentContext localContext = Bootstrap.createInitialComponentContext(null);
             XMultiComponentFactory localServiceManager = localContext.getServiceManager();
@@ -85,7 +86,7 @@ class OfficeConnection implements OfficeContext {
             XPropertySet properties = OfficeUtils.cast(XPropertySet.class, serviceManager);
             componentContext = OfficeUtils.cast(XComponentContext.class, properties.getPropertyValue("DefaultContext"));
             connected = true;
-            logger.info(String.format("connected: '%s'", unoUrl));
+            logger.log(Level.INFO,"connected: ",unoUrl);
             OfficeConnectionEvent connectionEvent = new OfficeConnectionEvent(this);
             for (OfficeConnectionEventListener listener : connectionEventListeners) {
                 listener.connected(connectionEvent);
@@ -102,7 +103,7 @@ class OfficeConnection implements OfficeContext {
     }
 
     public synchronized void disconnect() {
-        logger.fine(String.format("disconnecting: '%s'", unoUrl));
+        logger.log(Level.INFO,"disconnecting: ",unoUrl);
         bridgeComponent.dispose();
     }
 

@@ -43,6 +43,8 @@ public class ConfigRefreshComponent {
     static class ConfigRefreshThread implements Runnable {
         @Override
         public void run() {
+            FileReader fileReader = null;
+            BufferedReader bufferedReader = null;
             try {
                 Properties properties = new Properties();
                 String text;
@@ -59,8 +61,8 @@ public class ConfigRefreshComponent {
                 String trustHost;
                 String pdfDownloadDisable;
                 while (true) {
-                    FileReader fileReader = new FileReader(configFilePath);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    fileReader = new FileReader(configFilePath);
+                    bufferedReader = new BufferedReader(fileReader);
                     properties.load(bufferedReader);
                     OfficeUtils.restorePropertiesFromEnvFormat(properties);
                     cacheEnabled = Boolean.parseBoolean(properties.getProperty("cache.enabled", ConfigConstants.DEFAULT_CACHE_ENABLED));
@@ -92,6 +94,22 @@ public class ConfigRefreshComponent {
                 }
             } catch (IOException | InterruptedException e) {
                 LOGGER.error("读取配置文件异常", e);
+                Thread.currentThread().interrupt();
+            }finally {
+                if(fileReader!=null){
+                    try {
+                        fileReader.close();
+                    } catch (IOException e) {
+                        LOGGER.info("关闭FileReader异常",e);
+                    }
+                }
+                if(bufferedReader!=null){
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        LOGGER.info("关闭BufferedReader异常",e);
+                    }
+                }
             }
         }
 

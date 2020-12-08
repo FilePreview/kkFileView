@@ -6,15 +6,9 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * @author chenjh
- * @since 2020/5/13 18:34
- */
-
-/**
  * Author：houzheng
  * Date：11-18
  * 水印配置过滤器
- *
  */
 public class WatermarkConfigFilter implements Filter {
 
@@ -23,11 +17,10 @@ public class WatermarkConfigFilter implements Filter {
      * Author：houzheng
      * Date：11-18
      * 初始化
-     *
      */
     @Override
     public void init(FilterConfig filterConfig) {
-
+        // do nothing but have to be overridden
     }
 
     @Override
@@ -50,10 +43,9 @@ public class WatermarkConfigFilter implements Filter {
      * Author：houzheng
      * Date：11-18
      * 销毁
-     *
      */
     @Override
     public void destroy() {
-
+        // do nothing but have to be overridden
     }
 }

@@ -25,6 +25,9 @@ import java.util.TreeMap;
  * @author harry
  */
 public class CollectionsUtility {
+    private CollectionsUtility(){
+        throw new IllegalStateException("Utility class");
+    }
 
     public static <T extends Comparable<Number>> T getLevel(List<T> list, Number currentValue) {
         T result = null;
@@ -37,11 +40,11 @@ public class CollectionsUtility {
         return result;
     }
 
-    public static Boolean isNullOrEmpty(Iterable<?> collection) {
+    public static boolean isNullOrEmpty(Iterable<?> collection) {
         return collection == null || !collection.iterator().hasNext();
     }
 
-    public static <T> Boolean isNullOrEmpty(T [] collection) {
+    public static <T> boolean isNullOrEmpty(T [] collection) {
         return collection == null || collection.length==0;
     }
 
@@ -52,11 +55,12 @@ public class CollectionsUtility {
      * @return 去掉空值与签名参数后的新签名参数组
      */
     public static Map<String, String> filterEmpty(Map<String, String> array, String[] exceptArray) {
-        Map<String, String> result = new TreeMap<String, String>();
+        Map<String, String> result = new TreeMap<>();
         if (array == null || array.size() <= 0) {
             return result;
         }
-        for (String key : array.keySet()) {
+        for (Map.Entry<String,String> entry : array.entrySet()) {
+            String key = entry.getKey();
             String value = array.get(key);
             if (StringUtility.isNullOrEmpty(value) || StringUtility.existInArray(exceptArray, key)) {
                 continue;

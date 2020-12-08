@@ -49,7 +49,7 @@ public class RedissonConfig {
     private String codec="org.redisson.codec.JsonJacksonCodec";
 
     @Bean
-    Config config() throws Exception {
+    Config config() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         Config config = new Config();
         config.useSingleServer().setAddress(address)
                 .setConnectionMinimumIdleSize(connectionMinimumIdleSize)
@@ -70,8 +70,8 @@ public class RedissonConfig {
                 .setIdleConnectionTimeout(idleConnectionTimeout)
                 .setPingTimeout(pingTimeout)
                 .setPassword(password);
-        Codec codec=(Codec) ClassUtils.forName(getCodec(), ClassUtils.getDefaultClassLoader()).newInstance();
-        config.setCodec(codec);
+        Codec instance=(Codec) ClassUtils.forName(getCodec(), ClassUtils.getDefaultClassLoader()).newInstance();
+        config.setCodec(instance);
         config.setThreads(thread);
         config.setEventLoopGroup(new NioEventLoopGroup());
         config.setUseLinuxNativeEpoll(false);
