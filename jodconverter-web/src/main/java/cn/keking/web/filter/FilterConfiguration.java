@@ -42,6 +42,7 @@ public class FilterConfiguration {
         filterUri.add("/picturesPreview");
         filterUri.add("/getCorsFile");
         filterUri.add("/addTask");
+        filterUri.add("/preview");
         TrustHostFilter filter = new TrustHostFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);
@@ -60,6 +61,7 @@ public class FilterConfiguration {
         filterUri.add("/index");
         filterUri.add("/onlinePreview");
         filterUri.add("/picturesPreview");
+        filterUri.add("/preview");
         BaseUrlFilter filter = new BaseUrlFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);
@@ -77,6 +79,7 @@ public class FilterConfiguration {
         Set<String> filterUri = new HashSet<>();
         filterUri.add("/onlinePreview");
         filterUri.add("/picturesPreview");
+        filterUri.add("/preview");
         WatermarkConfigFilter filter = new WatermarkConfigFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);

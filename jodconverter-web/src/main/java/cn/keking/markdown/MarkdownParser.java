@@ -60,7 +60,7 @@ public class MarkdownParser {
             bufferedReader = new BufferedReader(new FileReader(mdFile));
             String s;
             while ((s = bufferedReader.readLine()) != null) {
-                sbuf.append(s + "\n");
+                sbuf.append(s).append("\n");
             }
             bufferedReader.close();
             String res = parse(sbuf.toString());
@@ -111,5 +111,11 @@ public class MarkdownParser {
             }
         }
         return true;
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        File inFile = new File("D:/swap/TEST.md");
+        File outFile = new File("D:/swap/TEST.html");
+        parse(inFile,outFile);
     }
 }

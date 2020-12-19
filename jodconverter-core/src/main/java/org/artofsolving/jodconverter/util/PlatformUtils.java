@@ -19,7 +19,7 @@ package org.artofsolving.jodconverter.util;
 public class PlatformUtils {
 
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
-    
+
     private PlatformUtils() {
         throw new AssertionError("utility class must not be instantiated");
     }
