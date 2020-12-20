@@ -82,6 +82,7 @@ public class FileConvertQueueTask {
                         Thread.sleep(1000L*10L);
                     } catch (InterruptedException ex){
                         logger.error("InterruptedException:",ex);
+                        Thread.currentThread().interrupt();
                     }
                     logger.info("处理预览转换任务异常，url：{}", url, e);
                 }

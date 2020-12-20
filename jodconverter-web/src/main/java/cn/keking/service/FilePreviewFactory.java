@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * Created by kl on 2018/1/17.
- * Content :
+ * 注册文件格式和对应处理类之间的映射
  */
 @Service
 public class FilePreviewFactory {

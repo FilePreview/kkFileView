@@ -17,6 +17,9 @@ import java.util.Set;
 @Configuration
 public class FilterConfiguration {
 
+    public static final String PREVIEW = "/preview";
+    public static final String PICTURES_PREVIEW = "/picturesPreview";
+
     /**
      * Author：houzheng
      * Date：11-18
@@ -38,11 +41,10 @@ public class FilterConfiguration {
     @Bean
     public FilterRegistrationBean getTrustHostFilter() {
         Set<String> filterUri = new HashSet<>();
-        filterUri.add("/onlinePreview");
-        filterUri.add("/picturesPreview");
+        filterUri.add(PICTURES_PREVIEW);
         filterUri.add("/getCorsFile");
         filterUri.add("/addTask");
-        filterUri.add("/preview");
+        filterUri.add(PREVIEW);
         TrustHostFilter filter = new TrustHostFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);
@@ -59,9 +61,8 @@ public class FilterConfiguration {
     public FilterRegistrationBean getBaseUrlFilter() {
         Set<String> filterUri = new HashSet<>();
         filterUri.add("/index");
-        filterUri.add("/onlinePreview");
-        filterUri.add("/picturesPreview");
-        filterUri.add("/preview");
+        filterUri.add(PICTURES_PREVIEW);
+        filterUri.add(PREVIEW);
         BaseUrlFilter filter = new BaseUrlFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);
@@ -77,9 +78,8 @@ public class FilterConfiguration {
     @Bean
     public FilterRegistrationBean getWatermarkConfigFilter() {
         Set<String> filterUri = new HashSet<>();
-        filterUri.add("/onlinePreview");
-        filterUri.add("/picturesPreview");
-        filterUri.add("/preview");
+        filterUri.add(PICTURES_PREVIEW);
+        filterUri.add(PREVIEW);
         WatermarkConfigFilter filter = new WatermarkConfigFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);
