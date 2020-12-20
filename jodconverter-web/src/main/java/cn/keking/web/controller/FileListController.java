@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -18,15 +19,18 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "fileManager")
+//@RequestMapping(value = "fileManager")
 public class FileListController {
-    @Value("${filemanager.root}")
-    private String root;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(FileListController.class);
 
+    private String getRootPath(){
+        String separator ="/";
+        String userDir = System.getProperty("user.dir");
+        return userDir + separator + "jodconverter-web" + separator + "src" + separator + "main" +separator + "file" +separator +"demo";
+    }
     @PostMapping("list")
     public Object list(@RequestBody JSONObject json) {
+        String root = getRootPath();
         // 需要显示的目录路径
         String path = json.getString("path");
         // 返回的结果集

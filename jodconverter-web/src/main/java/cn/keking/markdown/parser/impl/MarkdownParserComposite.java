@@ -51,8 +51,7 @@ public class MarkdownParserComposite implements MarkParser {
                 //按文本处理
                 literaryParse.parse(markContext);
             }
-        }
-        while (markContext.getCurrentPointer() < markContext.getContentLength());
+        } while (markContext.getCurrentPointer() < markContext.getContentLength());
     }
 
     @Override

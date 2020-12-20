@@ -55,8 +55,8 @@ public class FtpUtils {
     }
 
     /**
-     * @Author FanPan
-     * @Date 2020-11-19
+     * @author FanPan
+     * @date 2020-11-19
      * Description: 从FTP服务器下载文件
      * @param ftpUrl ftp中文件的url
      * @param localFilePath 保存到本地的地址

@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author chenjh
- * @since 2019/4/2 16:45
+ * 缓存服务的接口
  */
 public interface CacheService {
 
@@ -18,7 +17,14 @@ public interface CacheService {
     Integer DEFAULT_IMG_CAPACITY = 500000;
     Integer DEFAULT_PDFIMG_CAPACITY = 500000;
 
+    /**
+     * 初始化pdf缓存池
+     */
     void initPDFCachePool(Integer capacity);
+
+    /**
+     * 初始化图片缓存池
+     */
     void initIMGCachePool(Integer capacity);
     void initPdfImagesCachePool(Integer capacity);
     void putPDFCache(String key, String value);

@@ -85,7 +85,7 @@ public class CacheServiceRocksDBImpl implements CacheService {
             pdfCacheItem.put(key, value);
             db.put(FILE_PREVIEW_PDF_KEY.getBytes(), toByteArray(pdfCacheItem));
         } catch (RocksDBException | IOException e) {
-            LOGGER.error("Put into RocksDB Exception" ,e);
+            LOGGER.error(PUT_INTO_ROCKS_DB_EXCEPTION ,e);
         }
     }
 
@@ -96,7 +96,7 @@ public class CacheServiceRocksDBImpl implements CacheService {
             imgCacheItem.put(key, value);
             db.put(FILE_PREVIEW_IMGS_KEY.getBytes(), toByteArray(imgCacheItem));
         } catch (RocksDBException | IOException e) {
-            LOGGER.error("Put into RocksDB Exception" ,e);
+            LOGGER.error(PUT_INTO_ROCKS_DB_EXCEPTION ,e);
         }
     }
 

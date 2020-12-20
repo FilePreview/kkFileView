@@ -19,7 +19,7 @@ package org.artofsolving.jodconverter.document;
  * TEXT: 纯文本
  * SPREADSHEET: 表格
  * PRESENTATION: 演示文稿
- * DRAWING: ???(绘制的图纸??)
+ * DRAWING:绘制的图纸
  */
 public enum DocumentFamily {
 

@@ -42,7 +42,6 @@ public class SigarProcessManager implements ProcessManager {
              * operator eq: equal to value
              * State.Name: base name of the process executable
              */
-
             long[] pids = ProcessFinder.find(sigar, "State.Name.eq=" + query.getCommand());
             for (int i = 0; i < pids.length; i++) {
                 String[] arguments = sigar.getProcArgs(pids[i]);

@@ -47,15 +47,6 @@ public class DownloadUtils {
         String type = fileAttribute.getSuffix();
         ReturnResponse<String> response = new ReturnResponse<>(0, "下载成功!!!", "");
         /*
-         * modified by Qin Huihuang, 如果是本地文件的话，不需要下载处理，直接进行转码
-         * 因此直接将content设置为文件的绝对路径即可
-         */
-        if(urlStr.startsWith("D:/")||urlStr.startsWith("C:/")||urlStr.startsWith("E:/")){
-            response.setContent(urlStr);
-            response.setMsg(fileAttribute.getName());
-            return response;
-        }
-        /*
          * Author FanPan Date 2020-11-22
          * UUID为通用唯一标识码
          */

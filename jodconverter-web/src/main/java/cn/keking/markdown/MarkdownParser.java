@@ -3,7 +3,6 @@ package cn.keking.markdown;
 import cn.keking.markdown.mark.MarkContext;
 import cn.keking.markdown.parser.MarkParser;
 import cn.keking.markdown.parser.impl.MarkdownParserComposite;
-import cn.keking.web.controller.FileListController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +10,12 @@ import java.io.*;
 
 public class MarkdownParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(MarkdownParser.class);
+    public static final String IOEXCEPTION = "IOException:";
 
     private MarkdownParser(){
         throw new IllegalStateException("Utility class");
-    };
+    }
+
     private static final String PREFIX =
             "<!doctype html>\n" +
                      "<html>\n" +
@@ -60,7 +61,7 @@ public class MarkdownParser {
             bufferedReader = new BufferedReader(new FileReader(mdFile));
             String s;
             while ((s = bufferedReader.readLine()) != null) {
-                sbuf.append(s + "\n");
+                sbuf.append(s).append("\n");
             }
             bufferedReader.close();
             String res = parse(sbuf.toString());
@@ -76,14 +77,14 @@ public class MarkdownParser {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
-                    LOGGER.error("IOException:",e);
+                    LOGGER.error(IOEXCEPTION,e);
                 }
             }
             if(bufferedWriter!=null){
                 try {
                     bufferedWriter.close();
                 } catch (IOException e) {
-                    LOGGER.error("IOException:",e);
+                    LOGGER.error(IOEXCEPTION,e);
                 }
             }
         }
@@ -106,10 +107,11 @@ public class MarkdownParser {
                 try {
                     bufferedWriter.close();
                 } catch (IOException e) {
-                    LOGGER.error("IOException:",e);
+                    LOGGER.error(IOEXCEPTION,e);
                 }
             }
         }
         return true;
     }
+
 }

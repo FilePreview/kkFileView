@@ -12,4 +12,7 @@
 //
 package org.artofsolving.jodconverter.office;
 
+/**
+ * Open Office有两种传输协议，一种是使用Pipe，一种是使用Socket
+ */
 public enum OfficeConnectionProtocol { PIPE, SOCKET }

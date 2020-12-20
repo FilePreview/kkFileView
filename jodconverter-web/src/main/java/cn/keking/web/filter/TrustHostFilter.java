@@ -63,7 +63,11 @@ public class TrustHostFilter implements Filter {
      * 获取源url
      */
     private String getSourceUrl(ServletRequest request) {
+        String header = "http://localhost:8012/demo";
         String url = request.getParameter("url");
+        if(!url.startsWith("http://")){
+            url = header +url ;
+        }
         String currentUrl = request.getParameter("currentUrl");
         String urlPath = request.getParameter("urlPath");
         if (StringUtils.isNotBlank(url)) {

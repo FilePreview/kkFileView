@@ -12,6 +12,9 @@
 //
 package org.artofsolving.jodconverter.office;
 
+/**
+ * 转换一个文件对应一个OfficeTask
+ */
 public interface OfficeTask {
 
     void execute(OfficeContext context) ;

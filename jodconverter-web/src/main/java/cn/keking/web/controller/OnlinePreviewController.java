@@ -10,6 +10,7 @@ import cn.keking.utils.DownloadUtils;
 import cn.keking.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,8 +63,14 @@ public class OnlinePreviewController {
      * 根据文件的类型返回相应的FilePreview接口的实现类
      * 再调用其filePreviewHandle()方法进行文件解析转换
      */
-    @GetMapping(value = "/onlinePreview")
-    public String onlinePreview(String url, Model model, HttpServletRequest req) throws InterruptedException {
+    @GetMapping(value = "/preview")
+    public String preview(String url, Model model, HttpServletRequest req) throws InterruptedException {
+        String header = "http://localhost:8012/demo";
+        url = header + url;
+        return getViewName(url, model, req);
+    }
+
+    private String getViewName(String url, Model model, HttpServletRequest req) throws InterruptedException {
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
         model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
@@ -72,6 +79,7 @@ public class OnlinePreviewController {
         logger.info("预览文件url：{}，previewType：{}", url, fileAttribute.getType());
         return filePreview.filePreviewHandle(url, model, fileAttribute);
     }
+
 
     /**
      * Author：houzheng
